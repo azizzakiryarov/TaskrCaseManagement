@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TaskrCaseManagement</string>
+    <string name="title">Title</string>
+    <string name="state">State</string>
+    <string name="description">Description</string>
+    <string name="refresh">Refresh</string>
+</resources>
