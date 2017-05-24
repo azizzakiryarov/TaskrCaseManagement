@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import http.HttpService;
 import model.WorkItem;
@@ -40,15 +40,15 @@ public class FragmentDetails extends Fragment {
 
         View view = inflater.inflate(R.layout.activity_task_details, container, false);
 
-        EditText etTitle = (EditText) view.findViewById(R.id.task_title);
-        EditText etDescription = (EditText) view.findViewById(R.id.task_description);
-        EditText etStatus = (EditText) view.findViewById(R.id.task_status);
-       // EditText etAssignee = (EditText) view.findViewById(R.id.task_assignee);
+        TextView tvTitle = (TextView) view.findViewById(R.id.task_title);
+        TextView tvDescription = (TextView) view.findViewById(R.id.task_description);
+        TextView tvStatus = (TextView) view.findViewById(R.id.task_status);
+        // EditText etAssignee = (EditText) view.findViewById(R.id.task_assignee);
 
         if (workItem != null) {
-            etTitle.setText(workItem.getTitle());
-            etDescription.setText(workItem.getDescription());
-            etStatus.setText(workItem.getState());
+            tvTitle.setText(workItem.getTitle());
+            tvDescription.setText(workItem.getDescription());
+            tvStatus.setText(workItem.getState());
             //assignee setText
         }
         return view;

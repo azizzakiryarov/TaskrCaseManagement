@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+
 import adapter.PagerAdapter;
 import fragment.FragmentUnstarted;
 import http.HttpService;
@@ -16,9 +17,8 @@ import model.WorkItem;
 
 public class HomeActivity extends AppCompatActivity implements FragmentUnstarted.Callbacks {
 
-    HttpService httpService = new HttpService();
-
     private static final String TAG = HomeActivity.class.getSimpleName();
+
     ViewPager viewPager;
     ProgressBar pUnstarted;
     ProgressBar pStarted;
@@ -45,6 +45,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
 
         if (actionBar != null) {
             actionBar.setTitle("Taskr");
+            actionBar.setDisplayHomeAsUpEnabled(false);
         }
     }
 
@@ -60,7 +61,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
 
         if (item != null) {
             int id = item.getItemId();
-
             if (id == R.id.action_refresh) {
 
                 return true;
@@ -74,4 +74,5 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
         Intent intent = TaskDetailsActivity.createIntent(this, workItem);
         startActivity(intent);
     }
+
 }
