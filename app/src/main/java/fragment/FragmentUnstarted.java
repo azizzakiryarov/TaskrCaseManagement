@@ -33,29 +33,34 @@ public class FragmentUnstarted extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (callBacks != null) {
+        try {
             callBacks = (Callbacks) context;
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Hosting activity must implement callbacks");
         }
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //???
-
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_unstarted, container, false);
 
         WorkItemListAdapter adapter = new WorkItemListAdapter(httpService.getAllUnstarted(),
                 new WorkItemListAdapter.OnItemClickedListener() {
                     @Override
                     public void onItemClicked(WorkItem workItem) {
-                        callBacks.onListItemClicked(workItem);
+
+                        if (callBacks != null) {
+                            callBacks.onListItemClicked(workItem);
+                        }
+
                     }
                 });
 
@@ -117,12 +122,13 @@ public class FragmentUnstarted extends Fragment {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onItemClickedListener.onItemClicked(workItem);
+                        if (onItemClickedListener != null) {
+                            onItemClickedListener.onItemClicked(workItem);
+                        }
+
                     }
                 });
             }
         }
     }
 }
-
-

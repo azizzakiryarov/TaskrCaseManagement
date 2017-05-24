@@ -22,6 +22,7 @@ public final class HttpService {
     private static final String BASE_URL = "http://10.0.2.2:8080";
     private static final Gson gson = new GsonBuilder().create();
     List<WorkItem> getList = new ArrayList<>();
+    WorkItem workItem = new WorkItem();
 
 
     public List<WorkItem> getAllUnstarted() {
@@ -33,7 +34,7 @@ public final class HttpService {
 
         ApiService service = retrofit.create(ApiService.class);
 
-        Call<List<WorkItem>> call = service.getAllUnstarted("Unstarted");
+        Call<List<WorkItem>> call = service.getAllUnstarted("Done");
 
         call.enqueue(new Callback<List<WorkItem>>() {
             @Override
@@ -41,13 +42,10 @@ public final class HttpService {
 
                 List<WorkItem> workItems = response.body();
 
-                //String details = "";
-
-
                 for (int i = 0; i < workItems.size(); i++) {
 
-
                     WorkItem workItem = new WorkItem();
+                    workItem.setId(workItems.get(i).getId());
                     workItem.setTitle(workItems.get(i).getTitle());
                     workItem.setDescription(workItems.get(i).getDescription());
                     workItem.setState(workItems.get(i).getState());
@@ -61,6 +59,33 @@ public final class HttpService {
             }
         });
         return getList;
+    }
+
+    public WorkItem getWorkItemById(long id) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(BASE_URL)
+                .build();
+
+        ApiService service = retrofit.create(ApiService.class);
+
+        Call<WorkItem> call = service.getWorkItemById(id);
+
+        call.enqueue(new Callback<WorkItem>() {
+            @Override
+            public void onResponse(Response<WorkItem> response, Retrofit retrofit) {
+
+                workItem = response.body();
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+        return workItem;
     }
 }
 

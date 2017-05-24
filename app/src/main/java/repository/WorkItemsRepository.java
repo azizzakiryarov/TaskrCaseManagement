@@ -18,4 +18,8 @@ public class WorkItemsRepository {
         return httpService.getAllUnstarted();
     }
 
+    public WorkItem getWorkItemById(long id) {
+        return httpService.getAllUnstarted().get((int) id);
+    }
+
 }

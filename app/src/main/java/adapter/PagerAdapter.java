@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import fragment.FragmentDetails;
 import fragment.FragmentDone;
 import fragment.FragmentMyTask;
 import fragment.FragmentStarted;
@@ -24,9 +25,9 @@ public class PagerAdapter extends FragmentPagerAdapter {
                 return new FragmentUnstarted();
             case 1:
                 return new FragmentStarted();
-            case 2:
-                return new FragmentDone();
             case 3:
+                return new FragmentDone();
+            case 4:
                 return new FragmentMyTask();
             default:
                 break;

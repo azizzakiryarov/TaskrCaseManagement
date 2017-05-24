@@ -1,19 +1,14 @@
 package se.groupfish.azizzakiryarov.taskrcasemanagement;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-
-import java.util.List;
-
 import adapter.PagerAdapter;
 import fragment.FragmentUnstarted;
 import http.HttpService;
@@ -76,6 +71,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
 
     @Override
     public void onListItemClicked(WorkItem workItem) {
-
+        Intent intent = TaskDetailsActivity.createIntent(this, workItem);
+        startActivity(intent);
     }
 }
