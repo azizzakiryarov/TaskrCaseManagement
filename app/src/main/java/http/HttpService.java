@@ -33,7 +33,7 @@ public final class HttpService {
 
         ApiService service = retrofit.create(ApiService.class);
 
-        Call<List<WorkItem>> call = service.getAllUnstarted("Done");
+        Call<List<WorkItem>> call = service.getAllUnstarted("Unstarted");
 
         call.enqueue(new Callback<List<WorkItem>>() {
             @Override
