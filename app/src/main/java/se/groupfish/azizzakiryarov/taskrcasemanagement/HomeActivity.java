@@ -1,30 +1,34 @@
 package se.groupfish.azizzakiryarov.taskrcasemanagement;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import adapter.PagerAdapter;
 import fragment.FragmentUnstarted;
-import http.HttpService;
 import model.WorkItem;
 
 public class HomeActivity extends AppCompatActivity implements FragmentUnstarted.Callbacks {
 
-    private static final String TAG = HomeActivity.class.getSimpleName();
-
     ViewPager viewPager;
+    SearchView searchView;
+
     ProgressBar pUnstarted;
     ProgressBar pStarted;
     ProgressBar pDone;
-    ProgressBar pMyTask;
-    ListView lvUnstarted;
+    ProgressBar pMytask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +36,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
         setContentView(R.layout.activity_home);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
-
-        pUnstarted = (ProgressBar) findViewById(R.id.UNSTARTED);
-        pStarted = (ProgressBar) findViewById(R.id.STARTED);
-        pDone = (ProgressBar) findViewById(R.id.DONE);
-        pMyTask = (ProgressBar) findViewById(R.id.MyTask);
 
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
@@ -46,24 +45,43 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
         if (actionBar != null) {
             actionBar.setTitle("Taskr");
             actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        //actionSearchView(menu);        This function will work when vi will create DB
+        // link för att forsätta         https://www.youtube.com/watch?v=Aa3m7jrtudI#t=106.187586
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    public void actionSearchView(Menu menu) {
+
+        MenuItem menuItem = menu.findItem(R.id.search_bar);
+        searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, HomeActivity.class)));
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+
         if (item != null) {
             int id = item.getItemId();
-            if (id == R.id.action_refresh) {
-
-                return true;
+            switch (id) {
+                case R.id.team_details:
+                    Intent intent = new Intent(this, TeamDetailsActivity.class);
+                    startActivity(intent);
+                case R.id.logout:
+                    // logout
+                case R.id.search_bar:
+                    //search
             }
         }
         return super.onOptionsItemSelected(item);
@@ -74,5 +92,4 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
         Intent intent = TaskDetailsActivity.createIntent(this, workItem);
         startActivity(intent);
     }
-
 }

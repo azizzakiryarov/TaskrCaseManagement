@@ -34,7 +34,9 @@ public class FragmentUnstarted extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callBacks = (Callbacks) context;
+            if (callBacks != null) {
+                callBacks = (Callbacks) context;
+            }
         } catch (ClassCastException e) {
             throw new IllegalArgumentException("Hosting activity must implement callbacks");
         }

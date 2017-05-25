@@ -8,13 +8,20 @@ import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
-import static android.R.attr.id;
-
 public interface ApiService {
 
-    @GET("/workitems")
+    @GET("/workitems/getByState")
     Call<List<WorkItem>> getAllUnstarted(@Query("state") String state);
 
     @GET("/workitems/{id}")
     Call<WorkItem> getWorkItemById(@Path("id") long id);
+
+    @GET("/workitems/getByState")
+    Call<List<WorkItem>> getAllStarted(@Query("state") String state);
+
+    @GET("/workitems/getByState")
+    Call<List<WorkItem>> getAllDone(@Query("state") String state);
+
+    @GET("/workitems/getAllWorkItemsWithIssues/{getAll}")
+    Call<List<WorkItem>> getAllMyTask(@Query("getAll") String getAll);
 }

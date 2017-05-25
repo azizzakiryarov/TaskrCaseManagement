@@ -2,6 +2,8 @@ package se.groupfish.azizzakiryarov.taskrcasemanagement;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,6 +36,7 @@ public class TaskDetailsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle("TaskName");
+            actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         }
 
         Intent startingIntent = getIntent();

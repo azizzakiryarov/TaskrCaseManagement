@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_refresh"
-        android:title="@string/refresh">
+        android:id="@+id/team_details"
+        android:title="@string/team_details" />
 
-    </item>
+    <item
+        android:id="@+id/logout"
+        android:title="@string/log_out" />
+
+    <item
+        android:id="@+id/search_bar"
+        android:actionViewClass="android.support.v7.widget.SearchView"
+        android:icon="@drawable/ic_search_black"
+        android:title="@string/search_bar"
+        app:showAsAction="always" />
+
 
 </menu>

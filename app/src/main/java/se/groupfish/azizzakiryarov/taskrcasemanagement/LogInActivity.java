@@ -1,6 +1,8 @@
 package se.groupfish.azizzakiryarov.taskrcasemanagement;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ public class LogInActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setTitle("");
             actionBar.hide();
+            actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         }
     }
 }

@@ -168,12 +168,12 @@
         android:layout_marginTop="142dp"
         android:background="@android:color/white">
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/list_view_DONE"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-        </ListView>
+        </android.support.v7.widget.RecyclerView>
 
     </RelativeLayout>
 
