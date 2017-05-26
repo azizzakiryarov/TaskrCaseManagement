@@ -14,13 +14,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import adapter.PagerAdapter;
+import fragment.FragmentDone;
+import fragment.FragmentMyTask;
+import fragment.FragmentStarted;
 import fragment.FragmentUnstarted;
 import model.WorkItem;
 
-public class HomeActivity extends AppCompatActivity implements FragmentUnstarted.Callbacks {
+public class HomeActivity extends AppCompatActivity implements FragmentUnstarted.Callbacks, View.OnClickListener {
 
     ViewPager viewPager;
     SearchView searchView;
@@ -36,6 +40,10 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
         setContentView(R.layout.activity_home);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
+        pUnstarted = (ProgressBar) findViewById(R.id.UNSTARTED);
+        pStarted = (ProgressBar) findViewById(R.id.STARTED);
+        pDone = (ProgressBar) findViewById(R.id.DONE);
+        pMytask = (ProgressBar) findViewById(R.id.MyTask);
 
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
@@ -47,6 +55,27 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
             actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        int id = v.getId();
+        switch (id) {
+            case R.id.UNSTARTED:
+                Intent intent1 = new Intent(this, FragmentUnstarted.class);
+                startActivity(intent1);
+            case R.id.STARTED:
+                Intent intent2 = new Intent(this, FragmentStarted.class);
+                startActivity(intent2);
+            case R.id.DONE:
+                Intent intent3 = new Intent(this, FragmentDone.class);
+                startActivity(intent3);
+            case R.id.MyTask:
+                Intent intent4 = new Intent(this, FragmentMyTask.class);
+                startActivity(intent4);
+        }
+
     }
 
     @Override
@@ -92,4 +121,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
         Intent intent = TaskDetailsActivity.createIntent(this, workItem);
         startActivity(intent);
     }
+
+
 }

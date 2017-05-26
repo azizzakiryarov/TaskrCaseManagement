@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="se.groupfish.azizzakiryarov.taskrcasemanagement.AddWorkItemsActivity">
+
+    <Button
+        android:id="@+id/btn_post"
+        android:layout_width="382dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:backgroundTint="#FFA500"
+        android:text="POST" />
+
+    <EditText
+        android:id="@+id/et_title"
+        android:layout_width="382dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:hint="title" />
+
+    <EditText
+        android:id="@+id/et_description"
+        android:layout_width="382dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:hint="description" />
+
+    <EditText
+        android:id="@+id/et_state"
+        android:layout_width="382dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:hint="state" />
+
+    <Button
+        android:id="@+id/btn_getAll"
+        android:layout_width="382dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="200dp"
+        android:backgroundTint="#FFA500"
+        android:text="GET ALL WORKITEMS" />
+
+
+    <RelativeLayout
+        android:layout_width="382dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="320dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/getAllWorkItems"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </RelativeLayout>
+
+</RelativeLayout>

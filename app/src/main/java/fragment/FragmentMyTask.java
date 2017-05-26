@@ -1,8 +1,11 @@
 package fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,12 +18,14 @@ import java.util.List;
 
 import http.HttpService;
 import model.WorkItem;
+import se.groupfish.azizzakiryarov.taskrcasemanagement.AddWorkItemsActivity;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.R;
 
 public class FragmentMyTask extends Fragment {
 
     HttpService httpService = new HttpService();
     private FragmentMyTask.Callbacks callBacks;
+    FloatingActionButton floatingActionButton;
 
     public interface Callbacks {
         void onListItemClicked(WorkItem workItem);
@@ -52,6 +57,15 @@ public class FragmentMyTask extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_my_task, container, false);
+        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
+        floatingActionButton.setColorFilter(Color.parseColor("#FFFFFF"));
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddWorkItemsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         FragmentMyTask.WorkItemListAdapter adapter = new FragmentMyTask.WorkItemListAdapter(httpService.getAllMyTask(),
                 new FragmentMyTask.WorkItemListAdapter.OnItemClickedListener() {
