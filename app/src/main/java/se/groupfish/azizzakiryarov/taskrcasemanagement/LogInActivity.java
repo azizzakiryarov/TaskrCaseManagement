@@ -1,5 +1,6 @@
 package se.groupfish.azizzakiryarov.taskrcasemanagement;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -11,10 +12,15 @@ import android.widget.ImageButton;
 
 public class LogInActivity extends AppCompatActivity {
 
+    static LogInActivity logInActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        logInActivity = this;
+        getInstance();
 
         ImageButton signInBtn = (ImageButton) findViewById(R.id.signIn_btn);
 
@@ -33,5 +39,9 @@ public class LogInActivity extends AppCompatActivity {
             actionBar.hide();
             actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         }
+    }
+
+    public static LogInActivity getInstance() {
+        return logInActivity;
     }
 }

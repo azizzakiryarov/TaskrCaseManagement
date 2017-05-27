@@ -3,6 +3,7 @@ package se.groupfish.azizzakiryarov.taskrcasemanagement;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -45,6 +47,7 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
         pDone = (ProgressBar) findViewById(R.id.DONE);
         pMytask = (ProgressBar) findViewById(R.id.MyTask);
 
+
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
 
@@ -58,21 +61,49 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
     }
 
     @Override
+    public void onBackPressed() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        builder.setMessage("Do you want to exit?");
+        builder.setCancelable(true);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+                LogInActivity.logInActivity.finish();
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+
+
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
+    // This is not working...
+    @Override
     public void onClick(View v) {
 
         int id = v.getId();
         switch (id) {
             case R.id.UNSTARTED:
-                Intent intent1 = new Intent(this, FragmentUnstarted.class);
+                Intent intent1 = new Intent(HomeActivity.this, FragmentUnstarted.class);
                 startActivity(intent1);
             case R.id.STARTED:
-                Intent intent2 = new Intent(this, FragmentStarted.class);
+                Intent intent2 = new Intent(HomeActivity.this, FragmentStarted.class);
                 startActivity(intent2);
             case R.id.DONE:
-                Intent intent3 = new Intent(this, FragmentDone.class);
+                Intent intent3 = new Intent(HomeActivity.this, FragmentDone.class);
                 startActivity(intent3);
             case R.id.MyTask:
-                Intent intent4 = new Intent(this, FragmentMyTask.class);
+                Intent intent4 = new Intent(HomeActivity.this, FragmentMyTask.class);
                 startActivity(intent4);
         }
 
