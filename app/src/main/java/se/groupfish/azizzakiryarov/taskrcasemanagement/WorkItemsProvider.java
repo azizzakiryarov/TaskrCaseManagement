@@ -7,10 +7,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-/**
- * Created by azizzakiryarov on 2017-05-25.
- */
-
 public class WorkItemsProvider extends ContentProvider {
     @Override
     public boolean onCreate() {

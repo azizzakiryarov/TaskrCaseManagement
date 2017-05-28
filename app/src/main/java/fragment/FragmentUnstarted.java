@@ -3,7 +3,6 @@ package fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -20,7 +19,6 @@ import java.util.List;
 import http.HttpService;
 import model.WorkItem;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.AddWorkItemsActivity;
-import se.groupfish.azizzakiryarov.taskrcasemanagement.HomeActivity;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.R;
 
 public class FragmentUnstarted extends Fragment {

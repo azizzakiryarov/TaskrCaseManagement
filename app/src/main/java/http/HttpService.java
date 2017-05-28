@@ -1,8 +1,5 @@
 package http;
 
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -21,8 +18,7 @@ public final class HttpService {
 
     private static final String BASE_URL = "http://10.0.2.2:8080";
     private static final Gson gson = new GsonBuilder().create();
-    List<WorkItem> getList = new ArrayList<>();
-    WorkItem workItem = new WorkItem();
+    private List<WorkItem> getList = new ArrayList<>();
 
 
     public List<WorkItem> getAllUnstarted() {
@@ -171,6 +167,8 @@ public final class HttpService {
 
     public WorkItem getWorkItemById(long id) {
 
+        final WorkItem getWorkItem = new WorkItem();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BASE_URL)
@@ -184,8 +182,10 @@ public final class HttpService {
             @Override
             public void onResponse(Response<WorkItem> response, Retrofit retrofit) {
 
-                workItem = response.body();
-
+                WorkItem workItemFromBody = response.body();
+                getWorkItem.setTitle(workItemFromBody.getTitle());
+                getWorkItem.setDescription(workItemFromBody.getDescription());
+                getWorkItem.setState(workItemFromBody.getState());
             }
 
             @Override
@@ -193,8 +193,35 @@ public final class HttpService {
 
             }
         });
-        return workItem;
+        return getWorkItem;
     }
+
+    public WorkItem addWorkItem(final String title, final String description, final String state) {
+
+        final WorkItem addWorkItem = new WorkItem();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(BASE_URL)
+                .build();
+
+        ApiService service = retrofit.create(ApiService.class);
+
+        Call<WorkItem> call = service.addWorkItem(new WorkItem(title, description, state));
+
+        call.enqueue(new Callback<WorkItem>() {
+            @Override
+            public void onResponse(Response<WorkItem> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
+        return addWorkItem;
+    }
+
 
     //POST Method // https://www.youtube.com/watch?v=wg9nG07UvuU
 }

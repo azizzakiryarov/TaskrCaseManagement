@@ -6,4 +6,7 @@
     <string name="team_details">Team Details</string>
     <string name="log_out">Logout</string>
     <string name="search_bar">Search</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
