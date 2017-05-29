@@ -4,55 +4,67 @@
     android:layout_height="match_parent">
 
     <EditText
+        android:id="@+id/et_put_URL"
         android:layout_width="382dp"
         android:layout_height="wrap_content"
-        android:hint="URL : workitems/" />
+        android:hint="URL : workitems/"
+        android:inputType="number" />
 
 
     <EditText
-        android:id="@+id/et_title"
+        android:id="@+id/et_put_title"
         android:layout_width="382dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:hint="title" />
 
     <EditText
-        android:id="@+id/et_description"
+        android:id="@+id/et_put_description"
         android:layout_width="382dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:hint="description" />
 
     <EditText
-        android:id="@+id/et_state"
+        android:id="@+id/et_put_state"
         android:layout_width="382dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="150dp"
         android:hint="state" />
 
     <EditText
-        android:id="@+id/et_userId"
+        android:id="@+id/et_put_userId"
         android:layout_width="382dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="200dp"
-        android:hint="user" />
-
-    <EditText
-        android:id="@+id/et_issueId"
-        android:layout_width="382dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="250dp"
-        android:hint="issue" />
-
+        android:hint="assignee user ID"
+        android:inputType="number" />
 
     <Button
-        android:id="@+id/btn_put"
+        android:id="@+id/btn_edit_put"
         android:layout_width="382dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="250dp"
         android:backgroundTint="#FFA500"
         android:text="PUT" />
+
+    <EditText
+        android:id="@+id/et_put_issueId"
+        android:layout_width="382dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
+        android:hint="issue (comment)" />
+
+    <Button
+        android:id="@+id/btn_edit_post"
+        android:layout_width="382dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="350dp"
+        android:backgroundTint="#FFA500"
+        android:text="POST" />
 
 </RelativeLayout>

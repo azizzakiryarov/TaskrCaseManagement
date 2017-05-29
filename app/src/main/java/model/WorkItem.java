@@ -24,12 +24,21 @@ public class WorkItem {
     @Expose
     private Long issueId;
 
-    public WorkItem (){}
+    public WorkItem() {
+    }
 
     public WorkItem(String title, String description, String state) {
         this.title = title;
         this.description = description;
         this.state = state;
+    }
+
+    public WorkItem(String state) {
+        this.state = state;
+    }
+
+    public WorkItem(Long userId) {
+        this.userId = userId;
     }
 
     public Long getId() {

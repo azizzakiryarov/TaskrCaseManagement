@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Issue;
 import model.WorkItem;
 import retrofit.Call;
 import retrofit.Callback;
@@ -220,6 +221,121 @@ public final class HttpService {
             }
         });
         return addWorkItem;
+    }
+
+    public void updateWorkItemsState(final Long id, final String state) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(BASE_URL)
+                .build();
+
+        ApiService service = retrofit.create(ApiService.class);
+
+        Call<WorkItem> call = service.updateWorkItemsState(id, new WorkItem(state));
+
+        call.enqueue(new Callback<WorkItem>() {
+            @Override
+            public void onResponse(Response<WorkItem> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
+    }
+
+    public void updateWorkItemsTitle(final Long id, final String title) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(BASE_URL)
+                .build();
+
+        ApiService service = retrofit.create(ApiService.class);
+
+        Call<WorkItem> call = service.updateWorkItemsTitle(id, new WorkItem(title));
+
+        call.enqueue(new Callback<WorkItem>() {
+            @Override
+            public void onResponse(Response<WorkItem> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
+    }
+
+    public void updateWorkItemsDescription(final Long id, final String description) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(BASE_URL)
+                .build();
+
+        ApiService service = retrofit.create(ApiService.class);
+
+        Call<WorkItem> call = service.updateWorkItemsDescription(id, new WorkItem(description));
+
+        call.enqueue(new Callback<WorkItem>() {
+            @Override
+            public void onResponse(Response<WorkItem> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
+    }
+
+    public void assigneeWorkItemToUser(final Long id, final Long userId) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(BASE_URL)
+                .build();
+
+        ApiService service = retrofit.create(ApiService.class);
+
+        Call<WorkItem> call = service.assigneeWorkItemToUser(id, new WorkItem(userId));
+
+        call.enqueue(new Callback<WorkItem>() {
+            @Override
+            public void onResponse(Response<WorkItem> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
+    }
+
+    public void addWorkItemToIssue(final Long id, final String issue) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(BASE_URL)
+                .build();
+
+        ApiService service = retrofit.create(ApiService.class);
+
+        Call<WorkItem> call = service.addWorkItemToIssue(id, new Issue(issue));
+
+        call.enqueue(new Callback<WorkItem>() {
+            @Override
+            public void onResponse(Response<WorkItem> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
     }
 
 
