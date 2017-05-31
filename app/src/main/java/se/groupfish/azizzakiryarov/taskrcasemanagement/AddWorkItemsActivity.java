@@ -66,14 +66,16 @@ public class AddWorkItemsActivity extends AppCompatActivity {
                 String title = etTitle.getText().toString();
                 String description = etDescription.getText().toString();
                 String state = etState.getText().toString();
-                Long userId = Long.valueOf(etUserId.getText().toString());
-                Long issueId = Long.valueOf(etIssueId.getText().toString());
+                //Long userId = Long.valueOf(etUserId.getText().toString());
+                //Long issueId = Long.valueOf(etIssueId.getText().toString());
 
+                //ONLINE
                 httpService.addWorkItem(title, description, state);
                 Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added...", Toast.LENGTH_SHORT).show();
 
 
-                db.addWorkItem(title, description, state, userId, issueId);
+                //OFFLINE
+                db.addWorkItem(title, description, state);
                 Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added...", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onClick: WorkItem added");
 

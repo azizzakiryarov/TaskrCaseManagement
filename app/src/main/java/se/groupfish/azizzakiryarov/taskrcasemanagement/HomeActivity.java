@@ -84,7 +84,6 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
 
-
             }
         });
         AlertDialog alertDialog = builder.create();
