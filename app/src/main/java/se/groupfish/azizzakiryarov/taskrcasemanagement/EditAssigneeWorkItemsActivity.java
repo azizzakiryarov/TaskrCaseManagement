@@ -61,7 +61,7 @@ public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
                     Toast.makeText(EditAssigneeWorkItemsActivity.this, "State is not updated... ", Toast.LENGTH_SHORT).show();
                 }
 
-                if (etTitle != null) {
+                if  (etTitle != null) {
                     httpService.updateWorkItemsTitle(id, title);
                     Toast.makeText(EditAssigneeWorkItemsActivity.this, "Title is updated... ", Toast.LENGTH_SHORT).show();
                 } else {

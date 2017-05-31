@@ -6,13 +6,13 @@
     tools:context="se.groupfish.azizzakiryarov.taskrcasemanagement.AddWorkItemsActivity">
 
     <Button
-    android:id="@+id/btn_post"
-    android:layout_width="190dp"
-    android:layout_height="wrap_content"
-    android:layout_alignParentStart="true"
-    android:layout_alignParentTop="true"
-    android:backgroundTint="#FFA500"
-    android:text="POST" />
+        android:id="@+id/btn_post"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:backgroundTint="#FFA500"
+        android:text="POST" />
 
     <Button
         android:id="@+id/btn_put"
@@ -20,8 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:backgroundTint="#FFA500"
         android:layout_marginLeft="190dp"
+        android:backgroundTint="#FFA500"
         android:text="PUT ->" />
 
     <EditText
@@ -45,21 +45,35 @@
         android:layout_marginTop="150dp"
         android:hint="state" />
 
+    <EditText
+        android:id="@+id/et_userId"
+        android:layout_width="382dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:hint="user assiggne" />
+
+    <EditText
+        android:id="@+id/et_issueId"
+        android:layout_width="382dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:hint="issue" />
+
     <Button
         android:id="@+id/btn_getAll"
         android:layout_width="382dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="300dp"
         android:backgroundTint="#FFA500"
         android:text="GET ALL WORKITEMS" />
 
 
     <RelativeLayout
         android:layout_width="382dp"
-        android:layout_height="252dp"
-        android:layout_marginTop="260dp">
+        android:layout_height="150dp"
+        android:layout_marginTop="360dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/getAllWorkItems"

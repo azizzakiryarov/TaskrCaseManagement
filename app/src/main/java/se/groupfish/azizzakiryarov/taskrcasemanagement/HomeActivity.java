@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import adapter.PagerAdapter;
+import dbhelper.DatabaseHelper;
 import fragment.FragmentDone;
 import fragment.FragmentMyTask;
 import fragment.FragmentStarted;
@@ -27,6 +28,8 @@ import fragment.FragmentUnstarted;
 import model.WorkItem;
 
 public class HomeActivity extends AppCompatActivity implements FragmentUnstarted.Callbacks, View.OnClickListener {
+
+    DatabaseHelper databaseHelper;
 
     ViewPager viewPager;
     SearchView searchView;
@@ -40,6 +43,8 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        databaseHelper = new DatabaseHelper(this);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         pUnstarted = (ProgressBar) findViewById(R.id.UNSTARTED);

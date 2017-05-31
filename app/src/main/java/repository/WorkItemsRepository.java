@@ -1,25 +1,8 @@
 package repository;
 
-import java.util.List;
+public interface WorkItemsRepository {
 
-import http.HttpService;
-import model.WorkItem;
+    boolean addWorkItem(String title, String description, String state, Long userId, Long issueId);
 
-
-public class WorkItemsRepository {
-
-    private HttpService httpService;
-
-    public WorkItemsRepository(HttpService httpService) {
-        this.httpService = httpService;
-    }
-
-    public List<WorkItem> getAllUnstarted() {
-        return httpService.getAllUnstarted();
-    }
-
-    public WorkItem getWorkItemById(long id) {
-        return httpService.getAllUnstarted().get((int) id);
-    }
 
 }

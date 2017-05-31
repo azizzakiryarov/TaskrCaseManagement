@@ -33,14 +33,6 @@ public class WorkItem {
         this.state = state;
     }
 
-    public WorkItem(String state) {
-        this.state = state;
-    }
-
-    public WorkItem(Long userId) {
-        this.userId = userId;
-    }
-
     public Long getId() {
         return id;
     }

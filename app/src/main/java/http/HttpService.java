@@ -21,7 +21,6 @@ public final class HttpService {
     private static final Gson gson = new GsonBuilder().create();
     private List<WorkItem> getList = new ArrayList<>();
 
-
     public List<WorkItem> getAllUnstarted() {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -225,6 +224,8 @@ public final class HttpService {
 
     public void updateWorkItemsState(final Long id, final String state) {
 
+        WorkItem workItemWithNewState = new WorkItem();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BASE_URL)
@@ -232,7 +233,7 @@ public final class HttpService {
 
         ApiService service = retrofit.create(ApiService.class);
 
-        Call<WorkItem> call = service.updateWorkItemsState(id, new WorkItem(state));
+        Call<WorkItem> call = service.updateWorkItemsState(id, workItemWithNewState.setState(state));
 
         call.enqueue(new Callback<WorkItem>() {
             @Override
@@ -248,6 +249,8 @@ public final class HttpService {
 
     public void updateWorkItemsTitle(final Long id, final String title) {
 
+        WorkItem workItemWithNewTilte = new WorkItem();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BASE_URL)
@@ -255,7 +258,7 @@ public final class HttpService {
 
         ApiService service = retrofit.create(ApiService.class);
 
-        Call<WorkItem> call = service.updateWorkItemsTitle(id, new WorkItem(title));
+        Call<WorkItem> call = service.updateWorkItemsTitle(id, workItemWithNewTilte.setTitle(title));
 
         call.enqueue(new Callback<WorkItem>() {
             @Override
@@ -271,6 +274,8 @@ public final class HttpService {
 
     public void updateWorkItemsDescription(final Long id, final String description) {
 
+        WorkItem workItemWithNewDescription = new WorkItem();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BASE_URL)
@@ -278,7 +283,7 @@ public final class HttpService {
 
         ApiService service = retrofit.create(ApiService.class);
 
-        Call<WorkItem> call = service.updateWorkItemsDescription(id, new WorkItem(description));
+        Call<WorkItem> call = service.updateWorkItemsDescription(id, workItemWithNewDescription.setDescription(description));
 
         call.enqueue(new Callback<WorkItem>() {
             @Override
@@ -294,6 +299,8 @@ public final class HttpService {
 
     public void assigneeWorkItemToUser(final Long id, final Long userId) {
 
+        WorkItem workItemWithNewUser = new WorkItem();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BASE_URL)
@@ -301,7 +308,7 @@ public final class HttpService {
 
         ApiService service = retrofit.create(ApiService.class);
 
-        Call<WorkItem> call = service.assigneeWorkItemToUser(id, new WorkItem(userId));
+        Call<WorkItem> call = service.assigneeWorkItemToUser(id, workItemWithNewUser.setId(userId));
 
         call.enqueue(new Callback<WorkItem>() {
             @Override
