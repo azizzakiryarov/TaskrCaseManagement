@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import model.Issue;
 import repository.WorkItemsRepository;
 
 import static android.provider.BaseColumns._ID;
@@ -22,7 +21,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements WorkItemsReposit
     private static final int DATABASE_VERSION = 1;
     private static final String TAG = DatabaseHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "TaskrCaseManagement";
-    private static final String GET_ALL_CONTACTS = "SELECT * FROM " + TABLE_NAME;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -97,16 +95,15 @@ public class DatabaseHelper extends SQLiteOpenHelper implements WorkItemsReposit
     }
 
     @Override
-    public boolean addWorkItem(String title, String description, String state) {
+    public boolean addWorkItem(String title, String description, String state, Long userId, Long issueId) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-
         contentValues.put(COLUMN_NAME_TITLE, title);
         contentValues.put(COLUMN_NAME_DESCRIPTION, description);
         contentValues.put(COLUMN_NAME_STATE, state);
-        //contentValues.put(COLUMN_NAME_USER_ID, state);
-        //contentValues.put(COLUMN_NAME_ISSUE_ID, state);
+        contentValues.put(COLUMN_NAME_USER_ID, userId);
+        contentValues.put(COLUMN_NAME_ISSUE_ID, issueId);
         long result = db.insert(TABLE_NAME, null, contentValues);
         Log.d(TAG, "onClick: added workItem  " + contentValues.toString());
 
@@ -117,77 +114,25 @@ public class DatabaseHelper extends SQLiteOpenHelper implements WorkItemsReposit
         }
     }
 
-    /*
-
-    private static final String CREATE_TABLE_WORKITEMS =
-            "CREATE TABLE " + ItemsDbContract.WorkItemsEntry.TABLE_NAME + " (" +
-                    ItemsDbContract.WorkItemsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    ItemsDbContract.WorkItemsEntry.COLUMN_NAME_TITLE + " TEXT," +
-                    ItemsDbContract.WorkItemsEntry.COLUMN_NAME_DESCRIPTION + " TEXT NOT NULL," +
-                    ItemsDbContract.WorkItemsEntry.COLUMN_NAME_STATUS + " TEXT NOT NULL," +
-                    ItemsDbContract.WorkItemsEntry.COLUMN_NAME_ASSIGNEE + " TEXT NOT NULL," +
-                    ItemsDbContract.WorkItemsEntry.COLUMN_NAME_TEAM_ID + " INTEGER NOT NULL,"+
-                    ItemsDbContract.WorkItemsEntry.COLUMN_NAME_USER_ID + " INTEGER NOT NULL,"+
-                    "FOREIGN KEY(" + ItemsDbContract.UsersEntry._ID + ") REFERENCES " + ItemsDbContract.WorkItemsEntry.TABLE_NAME + "(" + ItemsDbContract.WorkItemsEntry.COLUMN_NAME_TEAM_ID + "), " +
-                    "FOREIGN KEY(" + ItemsDbContract.TeamsEntry._ID + ") REFERENCES " + ItemsDbContract.WorkItemsEntry.TABLE_NAME + "(" + ItemsDbContract.WorkItemsEntry.COLUMN_NAME_USER_ID + "), " +
-                    "FOREIGN KEY(" + ItemsDbContract.UsersEntry.COLUMN_NAME_ASSIGNEE + ") REFERENCES " + ItemsDbContract.WorkItemsEntry.TABLE_NAME + "(" + ItemsDbContract.WorkItemsEntry.COLUMN_NAME_ASSIGNEE + "));";
-
-    private static final String CREATE_TABLE_USERS =
-            "CREATE TABLE " + ItemsDbContract.UsersEntry.TABLE_NAME + " (" +
-                    ItemsDbContract.UsersEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    ItemsDbContract.UsersEntry.COLUMN_NAME_USER_NUMBER + " TEXT, " +
-                    ItemsDbContract.UsersEntry.COLUMN_NAME_FIRSTNAME + " TEXT NOT NULL, " +
-                    ItemsDbContract.UsersEntry.COLUMN_NAME_LASTNAME + " TEXT NOT NULL, " +
-                    ItemsDbContract.UsersEntry.COLUMN_NAME_USER_STATE + " TEXT NOT NULL,"+
-                    ItemsDbContract.UsersEntry.COLUMN_NAME_ASSIGNEE + "TEXT NOT NULL," +
-                    ItemsDbContract.UsersEntry.COLUMN_NAME_TEAMID + "INTEGER NOT NULL," +
-                    "FOREIGN KEY(" + ItemsDbContract.TeamsEntry._ID + ") REFERENCES " + ItemsDbContract.UsersEntry.TABLE_NAME + "(" + ItemsDbContract.UsersEntry.COLUMN_NAME_TEAMID + "));";
-
-    private static final String CREATE_TABLE_TEAMS =
-            "CREATE TABLE " + ItemsDbContract.TeamsEntry.TABLE_NAME + " (" +
-                    ItemsDbContract.TeamsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    ItemsDbContract.TeamsEntry.COLUMN_TEAM_NAME + " TEXT, " +
-                    ItemsDbContract.TeamsEntry.COLUMN_TEAM_STATUS + " TEXT NOT NULL);";
-
-
-    private static final String DROP_TABLE_WORKITEMS =
-            "DROP TABLE IF EXISTS " + ItemsDbContract.WorkItemsEntry.TABLE_NAME;
-
-    private static final String DROP_TABLE_USERS =
-            "DROP TABLE IF EXISTS " + ItemsDbContract.UsersEntry.TABLE_NAME;
-
-    private static final String DROP_TABLE_TEAMS =
-            "DROP TABLE IF EXISTS " + ItemsDbContract.TeamsEntry.TABLE_NAME;
-
-
-
-    public static synchronized ItemsDbHelper getInstance(Context context) {
-        if(instance == null) {
-            instance = new ItemsDbHelper(context);
-        }
-        return instance;
-    }
-
-    private ItemsDbHelper(Context context) {
-        super(context, DB_NAME, null, DB_VERSION);
-    }
-
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TABLE_WORKITEMS);
-        db.execSQL(CREATE_TABLE_USERS);
-        db.execSQL(CREATE_TABLE_TEAMS);
+    public void updateTitle(Long id, String title) {
+
+
 
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(DROP_TABLE_WORKITEMS);
-        db.execSQL(DROP_TABLE_USERS);
-        db.execSQL(DROP_TABLE_TEAMS);
+    public void updateDescriptoin(Long id, String description) {
 
-        onCreate(db);
     }
-}
-     */
+
+    @Override
+    public void updateState(Long id, String state) {
+
+    }
+
+    @Override
+    public void addWorkItemToUser(Long workItemId, Long userId) {
+
+    }
 }

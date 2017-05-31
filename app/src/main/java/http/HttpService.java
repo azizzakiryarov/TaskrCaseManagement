@@ -196,9 +196,7 @@ public final class HttpService {
         return getWorkItem;
     }
 
-    public WorkItem addWorkItem(final String title, final String description, final String state) {
-
-        final WorkItem addWorkItem = new WorkItem();
+    public void addWorkItem(final String title, final String description, final String state) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -219,7 +217,6 @@ public final class HttpService {
             public void onFailure(Throwable t) {
             }
         });
-        return addWorkItem;
     }
 
     public void updateWorkItemsState(final Long id, final String state) {
@@ -308,7 +305,7 @@ public final class HttpService {
 
         ApiService service = retrofit.create(ApiService.class);
 
-        Call<WorkItem> call = service.assigneeWorkItemToUser(id, workItemWithNewUser.setId(userId));
+        Call<WorkItem> call = service.assigneeWorkItemToUser(id, workItemWithNewUser.setUserId(userId));
 
         call.enqueue(new Callback<WorkItem>() {
             @Override

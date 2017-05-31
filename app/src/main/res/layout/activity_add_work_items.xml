@@ -50,7 +50,7 @@
         android:layout_width="382dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="200dp"
-        android:hint="user assiggne" />
+        android:hint="assignee user ID" />
 
     <EditText
         android:id="@+id/et_issueId"

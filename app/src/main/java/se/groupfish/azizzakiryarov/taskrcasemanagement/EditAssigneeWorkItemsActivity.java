@@ -54,32 +54,34 @@ public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
                 final String state = etState.getText().toString();
                 final Long userId = Long.valueOf(etUser.getText().toString());
 
-                if (etState != null) {
+
+                if (!state.isEmpty()) {
                     httpService.updateWorkItemsState(id, state);
                     Toast.makeText(EditAssigneeWorkItemsActivity.this, "State is updated... ", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "State is not updated... ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "State not is updated... ", Toast.LENGTH_SHORT).show();
                 }
 
-                if  (etTitle != null) {
+                if (!etUser.getText().toString().isEmpty()) {
+                    httpService.assigneeWorkItemToUser(id, userId);
+                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "User is assigneed... ", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "User is assigneed... ", Toast.LENGTH_SHORT).show();
+                }
+
+
+                if (!title.isEmpty()) {
                     httpService.updateWorkItemsTitle(id, title);
                     Toast.makeText(EditAssigneeWorkItemsActivity.this, "Title is updated... ", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(EditAssigneeWorkItemsActivity.this, "Title is not updated... ", Toast.LENGTH_SHORT).show();
                 }
 
-                if (etDescription != null) {
+                if (!description.isEmpty()) {
                     httpService.updateWorkItemsDescription(id, description);
                     Toast.makeText(EditAssigneeWorkItemsActivity.this, "Description is updated... ", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(EditAssigneeWorkItemsActivity.this, "Description is not updated... ", Toast.LENGTH_SHORT).show();
-                }
-
-                if (etUser != null) {
-                    httpService.assigneeWorkItemToUser(id, userId);
-                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "User is assigneed... ", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "User is not assigneed... ", Toast.LENGTH_SHORT).show();
                 }
             }
 
