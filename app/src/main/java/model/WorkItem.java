@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class WorkItem {
 
+    private static final long DEFAULT_ID = -1;
+
     @SerializedName("id")
     @Expose
     private Long id;
@@ -28,6 +30,23 @@ public class WorkItem {
     }
 
     public WorkItem(String title, String description, String state) {
+        this.title = title;
+        this.description = description;
+        this.state = state;
+    }
+
+    public WorkItem(long id, String title, String description, String state, long userId, long issueId) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.state = state;
+        this.userId = userId;
+        this.issueId = issueId;
+
+    }
+
+    public WorkItem(long id, String title, String description, String state) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.state = state;
@@ -126,5 +145,9 @@ public class WorkItem {
                 ", description='" + description + '\'' +
                 ", state='" + state + '\'' +
                 '}';
+    }
+
+    public boolean hasBeenPersisted() {
+        return id != DEFAULT_ID;
     }
 }

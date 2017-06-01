@@ -140,7 +140,6 @@ public class FragmentUnstarted extends Fragment {
                         if (onItemClickedListener != null) {
                             onItemClickedListener.onItemClicked(workItem);
                         }
-
                     }
                 });
             }

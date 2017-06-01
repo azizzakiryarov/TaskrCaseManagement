@@ -70,13 +70,13 @@ public class AddWorkItemsActivity extends AppCompatActivity {
                 Long issueId = Long.valueOf(etIssueId.getText().toString());
 
                 //ONLINE
-                httpService.addWorkItem(title, description, state);
-                Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added...", Toast.LENGTH_SHORT).show();
+                //httpService.addWorkItem(title, description, state);
+                //Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to Server...", Toast.LENGTH_SHORT).show();
 
 
                 //OFFLINE
                 db.addWorkItem(title, description, state, userId, issueId);
-                Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to SQLite...", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onClick: WorkItem added");
 
 

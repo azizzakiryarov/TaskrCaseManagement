@@ -69,7 +69,6 @@ public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
                     Toast.makeText(EditAssigneeWorkItemsActivity.this, "User is assigneed... ", Toast.LENGTH_SHORT).show();
                 }
 
-
                 if (!title.isEmpty()) {
                     httpService.updateWorkItemsTitle(id, title);
                     Toast.makeText(EditAssigneeWorkItemsActivity.this, "Title is updated... ", Toast.LENGTH_SHORT).show();
@@ -84,7 +83,6 @@ public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
                     Toast.makeText(EditAssigneeWorkItemsActivity.this, "Description is not updated... ", Toast.LENGTH_SHORT).show();
                 }
             }
-
         });
 
         btnPost.setOnClickListener(new View.OnClickListener()

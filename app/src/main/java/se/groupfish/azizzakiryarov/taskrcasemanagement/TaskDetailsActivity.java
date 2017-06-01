@@ -9,15 +9,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import java.util.List;
 
-
+import fragment.EditWorkItemFragment;
 import http.HttpService;
 import model.WorkItem;
 
 public class TaskDetailsActivity extends AppCompatActivity {
 
-    private static final String EXTRA_WORKITEM_ID = "contact_id";
+
+    private static final String EXTRA_WORKITEM_ID = "workitem_id";
+    HttpService httpService = new HttpService();
+
 
     public static Intent createIntent(Context context, WorkItem workItem) {
         Intent intent = new Intent(context, TaskDetailsActivity.class);
@@ -39,15 +41,14 @@ public class TaskDetailsActivity extends AppCompatActivity {
             actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         }
 
-        Intent startingIntent = getIntent();
-        long id = startingIntent.getLongExtra(EXTRA_WORKITEM_ID, 0);
 
-        HttpService httpService = new HttpService();
-        WorkItem workItem = httpService.getWorkItemById(id);
-        List<WorkItem> workItems = httpService.getAllUnstarted();
+
+        Intent intent = getIntent();
+        final long id = intent.getLongExtra(EXTRA_WORKITEM_ID, -1);
 
     }
 
+    /*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -57,6 +58,20 @@ public class TaskDetailsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onWorkItemEdited(WorkItem workItem) {
+
+        repository.addOrUpdateWorkItem(workItem);
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
+    public WorkItem getWorkItem(long id) {
+        return repository.getWorkItem(id);
+    }
+    */
 }
 
 

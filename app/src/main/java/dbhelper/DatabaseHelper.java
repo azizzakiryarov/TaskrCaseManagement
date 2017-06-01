@@ -18,64 +18,63 @@ import static dbhelper.DBContract.WorkItemsEntry.TABLE_NAME;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements WorkItemsRepository {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
     private static final String TAG = DatabaseHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "TaskrCaseManagement";
+
+    private static DatabaseHelper instance;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    public static synchronized DatabaseHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new DatabaseHelper(context);
+        }
+        return instance;
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String CREATE_TABLE_WORKITEMS = "CREATE TABLE " + TABLE_NAME + " (" +
-                _ID + " INTEGER NOT NULL, " +
-                COLUMN_NAME_TITLE + " TEXT NOT NULL, " +
-                COLUMN_NAME_DESCRIPTION + " TEXT NOT NULL, " +
-                COLUMN_NAME_STATE + " TEXT NOT NULL, " +
-                COLUMN_NAME_USER_ID + " INTEGER DEFAULT NULL, " +
-                COLUMN_NAME_ISSUE_ID + " INTEGER DEFAULT NULL, " +
-                "PRIMARY KEY (" + _ID + "), " +
-                "UNIQUE KEY (" + DBContract.IssueEntry._ID + "), " +
-                "KEY (" + DBContract.UsersEntry._ID + ")" +
-                "FOREIGN KEY (" + COLUMN_NAME_ISSUE_ID + ") REFERENCES (" + DBContract.IssueEntry._ID + "), " +
-                "FOREIGN KEY (" + COLUMN_NAME_USER_ID + ") REFERENCES (" + DBContract.UsersEntry._ID + ");";
+        String CREATE_TABLE_WORKITEMS = "CREATE TABLE " + DBContract.WorkItemsEntry.TABLE_NAME + " (" +
+                DBContract.WorkItemsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                DBContract.WorkItemsEntry.COLUMN_NAME_TITLE + " TEXT NOT NULL, " +
+                DBContract.WorkItemsEntry.COLUMN_NAME_DESCRIPTION + " TEXT NOT NULL, " +
+                DBContract.WorkItemsEntry.COLUMN_NAME_STATE + " TEXT NOT NULL, " +
+                DBContract.WorkItemsEntry.COLUMN_NAME_USER_ID + " INTEGER DEFAULT NULL, " +
+                DBContract.WorkItemsEntry.COLUMN_NAME_ISSUE_ID + " INTEGER DEFAULT NULL, " +
+                "FOREIGN KEY (" + DBContract.WorkItemsEntry.COLUMN_NAME_ISSUE_ID + ") REFERENCES " + DBContract.WorkItemsEntry.TABLE_NAME + "(" + DBContract.IssueEntry._ID + "), " +
+                "FOREIGN KEY (" + DBContract.WorkItemsEntry.COLUMN_NAME_USER_ID + ") REFERENCES " + DBContract.WorkItemsEntry.TABLE_NAME + "(" + DBContract.UsersEntry._ID + "));";
 
         Log.d(TAG, "onCreate: " + CREATE_TABLE_WORKITEMS);
         db.execSQL(CREATE_TABLE_WORKITEMS);
 
         String CREATE_TABLE_USER = "CREATE TABLE " + DBContract.UsersEntry.TABLE_NAME + "( " +
-                DBContract.UsersEntry._ID + " INTEGER NOT NULL, " +
+                DBContract.UsersEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 DBContract.UsersEntry.COLUMN_NAME_FIRSTNAME + " TEXT NOT NULL, " +
                 DBContract.UsersEntry.COLUMN_NAME_LASTNAME + " TEXT NOT NULL, " +
                 DBContract.UsersEntry.COLUMN_NAME_USER_NAME + " TEXT NOT NULL, " +
                 DBContract.UsersEntry.COLUMN_NAME_USER_NUMBER + " TEXT NOT NULL, " +
                 DBContract.UsersEntry.COLUMN_NAME_USER_STATE + " TEXT NOT NULL, " +
                 DBContract.UsersEntry.COLUMN_NAME_TEAMID + " INTEGER DEFAULT NULL, " +
-                "PRIMARY KEY (" + DBContract.UsersEntry._ID + "), " +
-                "UNIQUE KEY (" + DBContract.UsersEntry.COLUMN_NAME_USER_NAME + "), " +
-                "UNIQUE KEY (" + DBContract.UsersEntry.COLUMN_NAME_USER_NUMBER + "), " +
-                "KEY (" + DBContract.UsersEntry.COLUMN_NAME_TEAMID + ")" +
-                "FOREIGN KEY (" + DBContract.UsersEntry.COLUMN_NAME_TEAMID + ") REFERENCES (" + DBContract.TeamsEntry._ID + ");";
+                "FOREIGN KEY (" + DBContract.UsersEntry.COLUMN_NAME_TEAMID + ") REFERENCES " + DBContract.UsersEntry.TABLE_NAME + "(" + DBContract.TeamsEntry._ID + "));";
 
         Log.d(TAG, "onCreate: " + CREATE_TABLE_USER);
         db.execSQL(CREATE_TABLE_USER);
 
         String CREATE_TABLE_TEAM = "CREATE TABLE " + DBContract.TeamsEntry.TABLE_NAME + "( " +
-                DBContract.TeamsEntry._ID + " INTEGER NOT NULL, " +
+                DBContract.TeamsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT , " +
                 DBContract.TeamsEntry.COLUMN_NAME_TEAM_NAME + " TEXT NOT NULL, " +
-                DBContract.TeamsEntry.COLUMN_NAME_TEAM_STATE + " TEXT NOT NULL, " +
-                "PRIMARY KEY (" + DBContract.TeamsEntry._ID + "), " +
-                "UNIQUE KEY (" + DBContract.TeamsEntry.COLUMN_NAME_TEAM_NAME + ");";
+                DBContract.TeamsEntry.COLUMN_NAME_TEAM_STATE + " TEXT NOT NULL);";
 
         Log.d(TAG, "onCreate: " + CREATE_TABLE_TEAM);
         db.execSQL(CREATE_TABLE_TEAM);
 
         String CREATE_TABLE_ISSUE = "CREATE TABLE " + DBContract.IssueEntry.TABLE_NAME + "( " +
-                DBContract.IssueEntry._ID + " INTEGER NOT NULL, " +
-                DBContract.IssueEntry.COLUMN_NAME_ISSUE_COMMENT + " TEXT NOT NULL, " +
-                "PRIMARY KEY (" + DBContract.IssueEntry._ID + ");";
+                DBContract.IssueEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT , " +
+                DBContract.IssueEntry.COLUMN_NAME_ISSUE_COMMENT + " TEXT NOT NULL);";
 
         Log.d(TAG, "onCreate: " + CREATE_TABLE_ISSUE);
         db.execSQL(CREATE_TABLE_ISSUE);
@@ -117,6 +116,8 @@ public class DatabaseHelper extends SQLiteOpenHelper implements WorkItemsReposit
     @Override
     public void updateTitle(Long id, String title) {
 
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
 
 
     }
