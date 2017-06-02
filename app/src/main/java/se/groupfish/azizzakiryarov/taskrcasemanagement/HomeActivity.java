@@ -25,9 +25,8 @@ import fragment.FragmentDone;
 import fragment.FragmentMyTask;
 import fragment.FragmentStarted;
 import fragment.FragmentUnstarted;
-import model.WorkItem;
 
-public class HomeActivity extends AppCompatActivity implements FragmentUnstarted.Callbacks, View.OnClickListener {
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
     DatabaseHelper databaseHelper;
 
@@ -150,12 +149,4 @@ public class HomeActivity extends AppCompatActivity implements FragmentUnstarted
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onListItemClicked(WorkItem workItem) {
-        Intent intent = TaskDetailsActivity.createIntent(this, workItem);
-        startActivity(intent);
-    }
-
-
 }

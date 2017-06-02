@@ -2,13 +2,17 @@ package dbhelper;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import model.WorkItem;
 import repository.WorkItemsRepository;
 
-import static android.provider.BaseColumns._ID;
 import static dbhelper.DBContract.WorkItemsEntry.COLUMN_NAME_DESCRIPTION;
 import static dbhelper.DBContract.WorkItemsEntry.COLUMN_NAME_ISSUE_ID;
 import static dbhelper.DBContract.WorkItemsEntry.COLUMN_NAME_STATE;
@@ -21,6 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements WorkItemsReposit
     private static final int DATABASE_VERSION = 4;
     private static final String TAG = DatabaseHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "TaskrCaseManagement";
+    private static final String GET_ALL_WORKITEMS = "SELECT * FROM " + DBContract.WorkItemsEntry.TABLE_NAME;
 
     private static DatabaseHelper instance;
 
@@ -135,5 +140,60 @@ public class DatabaseHelper extends SQLiteOpenHelper implements WorkItemsReposit
     @Override
     public void addWorkItemToUser(Long workItemId, Long userId) {
 
+    }
+
+    @Override
+    public List<WorkItem> getAllByTeamId() {
+        return null;
+    }
+
+    @Override
+    public List<WorkItem> getAllMyTask() {
+
+        List<WorkItem> allWorkItems = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(GET_ALL_WORKITEMS, null);
+
+        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+            int longIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry._ID);
+            int titleIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_TITLE);
+            int descriptionIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_DESCRIPTION);
+            int stateIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_STATE);
+
+            do {
+                long id = cursor.getLong(longIndex);
+                String title = cursor.getString(titleIndex);
+                String description = cursor.getString(descriptionIndex);
+                String state = cursor.getString(stateIndex);
+
+                WorkItem workItem = new WorkItem();
+                workItem.setId(id);
+                workItem.setTitle(title);
+                workItem.setDescription(description);
+                workItem.setState(state);
+
+                allWorkItems.add(workItem);
+
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return allWorkItems;
+    }
+
+    @Override
+    public List<WorkItem> getAllUnstarted() {
+        return null;
+    }
+
+    @Override
+    public List<WorkItem> getAllStarted() {
+        return null;
+    }
+
+    @Override
+    public List<WorkItem> getAllDone() {
+        return null;
     }
 }

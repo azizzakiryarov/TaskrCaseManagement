@@ -55,6 +55,7 @@ public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
                 final Long userId = Long.valueOf(etUser.getText().toString());
 
 
+                //ONLINE
                 if (!state.isEmpty()) {
                     httpService.updateWorkItemsState(id, state);
                     Toast.makeText(EditAssigneeWorkItemsActivity.this, "State is updated... ", Toast.LENGTH_SHORT).show();
@@ -94,6 +95,7 @@ public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
                 final Long id = Long.valueOf(etURL.getText().toString());
                 final String issue = etIssue.getText().toString();
 
+                //ONLINE
                 if (etIssue != null) {
                     httpService.addWorkItemToIssue(id, issue);
                     Toast.makeText(EditAssigneeWorkItemsActivity.this, "Issue is assigneed... ", Toast.LENGTH_SHORT).show();

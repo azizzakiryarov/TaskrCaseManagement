@@ -14,37 +14,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import http.HttpService;
 import model.WorkItem;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.AddWorkItemsActivity;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.R;
+import se.groupfish.azizzakiryarov.taskrcasemanagement.TaskDetailsActivity;
 
 public class FragmentMyTask extends Fragment {
 
     HttpService httpService = new HttpService();
-    private FragmentMyTask.Callbacks callBacks;
     FloatingActionButton floatingActionButton;
 
-    public interface Callbacks {
-        void onListItemClicked(WorkItem workItem);
-    }
 
     public static Fragment newInstance() {
-        return new FragmentMyTask();
+        return new FragmentUnstarted();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
-            if (callBacks != null) {
-                callBacks = (FragmentMyTask.Callbacks) context;
-            }
-        } catch (ClassCastException e) {
-            throw new IllegalArgumentException("Hosting activity must implement callbacks");
-        }
     }
 
     @Override
@@ -67,18 +58,9 @@ public class FragmentMyTask extends Fragment {
             }
         });
 
-        FragmentMyTask.WorkItemListAdapter adapter = new FragmentMyTask.WorkItemListAdapter(httpService.getAllMyTask(),
-                new FragmentMyTask.WorkItemListAdapter.OnItemClickedListener() {
-                    @Override
-                    public void onItemClicked(WorkItem workItem) {
+        ArrayList<WorkItem> workItems = (ArrayList<WorkItem>) httpService.getAllMyTask();
 
-                        if (callBacks != null) {
-                            callBacks.onListItemClicked(workItem);
-                        }
-
-                    }
-                });
-
+        FragmentMyTask.WorkItemListAdapter adapter = new FragmentMyTask.WorkItemListAdapter(workItems, getContext());
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_view_MYTASK);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -87,25 +69,29 @@ public class FragmentMyTask extends Fragment {
     }
 
     private static final class WorkItemListAdapter extends RecyclerView.Adapter<FragmentMyTask.WorkItemListAdapter.WorkItemViewHolder> {
-        private final List<WorkItem> workItems;
-        private final FragmentMyTask.WorkItemListAdapter.OnItemClickedListener onItemClickedListener;
+        ArrayList<WorkItem> workItems;
+        Context ctx;
 
-        private WorkItemListAdapter(List<WorkItem> workItems, FragmentMyTask.WorkItemListAdapter.OnItemClickedListener onItemClickedListener) {
+
+        private WorkItemListAdapter(ArrayList<WorkItem> workItems, Context ctx) {
+
             this.workItems = workItems;
-            this.onItemClickedListener = onItemClickedListener;
+            this.ctx = ctx;
         }
 
         @Override
         public FragmentMyTask.WorkItemListAdapter.WorkItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View itemView = inflater.inflate(R.layout.row, parent, false);
-            return new FragmentMyTask.WorkItemListAdapter.WorkItemViewHolder(itemView);
+
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent, false);
+            FragmentMyTask.WorkItemListAdapter.WorkItemViewHolder workItemViewHolder = new FragmentMyTask.WorkItemListAdapter.WorkItemViewHolder(view, ctx, workItems);
+            return workItemViewHolder;
+
         }
 
         @Override
         public void onBindViewHolder(FragmentMyTask.WorkItemListAdapter.WorkItemViewHolder holder, int position) {
             WorkItem workItem = workItems.get(position);
-            holder.bindView(workItem, onItemClickedListener);
+            holder.bindView(workItem);
         }
 
         @Override
@@ -113,36 +99,43 @@ public class FragmentMyTask extends Fragment {
             return workItems.size();
         }
 
-        public interface OnItemClickedListener {
-            void onItemClicked(WorkItem workItem);
-        }
-
-        static final class WorkItemViewHolder extends RecyclerView.ViewHolder {
+        static final class WorkItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             private final TextView tvTitle;
             private final TextView tvDescription;
             private final TextView tvState;
+            ArrayList<WorkItem> workItems = new ArrayList<>();
+            Context ctx;
 
 
-            WorkItemViewHolder(View itemView) {
+            WorkItemViewHolder(View itemView, Context ctx, ArrayList<WorkItem> workItems) {
                 super(itemView);
+
+                itemView.setOnClickListener(this);
+                this.workItems = workItems;
+                this.ctx = ctx;
+
                 tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
                 tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
                 tvState = (TextView) itemView.findViewById(R.id.tvState);
             }
 
-            void bindView(final WorkItem workItem, final FragmentMyTask.WorkItemListAdapter.OnItemClickedListener onItemClickedListener) {
+            void bindView(final WorkItem workItem) {
                 tvTitle.setText(workItem.getTitle());
                 tvDescription.setText(workItem.getDescription());
                 tvState.setText(workItem.getState());
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (onItemClickedListener != null) {
-                            onItemClickedListener.onItemClicked(workItem);
-                        }
+            }
 
-                    }
-                });
+            @Override
+            public void onClick(View v) {
+
+                int position = getAdapterPosition();
+                WorkItem workItem = this.workItems.get(position);
+                Intent intent = new Intent(this.ctx, TaskDetailsActivity.class);
+                intent.putExtra("title", workItem.getTitle());
+                intent.putExtra("description", workItem.getDescription());
+                intent.putExtra("state", workItem.getState());
+                this.ctx.startActivity(intent);
+
             }
         }
     }
