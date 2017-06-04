@@ -141,9 +141,12 @@ public class WorkItem {
     @Override
     public String toString() {
         return "WorkItem{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", state='" + state + '\'' +
+                ", userId=" + userId +
+                ", issueId=" + issueId +
                 '}';
     }
 

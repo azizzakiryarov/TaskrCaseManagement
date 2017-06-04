@@ -11,4 +11,5 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="btn_edit_workitem">Edit workitem</string>
     <string name="action_add_workitem">Add workitem</string>
+    <string name="all_workItems_by_teamId">Team overview</string>
 </resources>

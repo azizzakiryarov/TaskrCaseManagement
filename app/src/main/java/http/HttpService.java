@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Issue;
+import model.User;
 import model.WorkItem;
 import retrofit.Call;
 import retrofit.Callback;
@@ -19,7 +20,8 @@ public final class HttpService {
 
     private static final String BASE_URL = "http://10.0.2.2:8080";
     private static final Gson gson = new GsonBuilder().create();
-    private List<WorkItem> getList = new ArrayList<>();
+    private List<WorkItem> getWorkItemsList = new ArrayList<>();
+    private List<User> getUsersList = new ArrayList<>();
 
     public List<WorkItem> getAllUnstarted() {
 
@@ -28,7 +30,7 @@ public final class HttpService {
                 .baseUrl(BASE_URL)
                 .build();
 
-        ApiService service = retrofit.create(ApiService.class);
+        ApiRepository service = retrofit.create(ApiRepository.class);
 
         Call<List<WorkItem>> call = service.getAllUnstarted("Unstarted");
 
@@ -45,7 +47,8 @@ public final class HttpService {
                     workItem.setTitle(workItems.get(i).getTitle());
                     workItem.setDescription(workItems.get(i).getDescription());
                     workItem.setState(workItems.get(i).getState());
-                    getList.add(workItem);
+                    workItem.setUserId(workItems.get(i).getUserId());
+                    getWorkItemsList.add(workItem);
 
                 }
             }
@@ -54,7 +57,7 @@ public final class HttpService {
             public void onFailure(Throwable t) {
             }
         });
-        return getList;
+        return getWorkItemsList;
     }
 
     public List<WorkItem> getAllStarted() {
@@ -64,7 +67,7 @@ public final class HttpService {
                 .baseUrl(BASE_URL)
                 .build();
 
-        ApiService service = retrofit.create(ApiService.class);
+        ApiRepository service = retrofit.create(ApiRepository.class);
 
         Call<List<WorkItem>> call = service.getAllStarted("Started");
 
@@ -81,7 +84,8 @@ public final class HttpService {
                     workItem.setTitle(workItems.get(i).getTitle());
                     workItem.setDescription(workItems.get(i).getDescription());
                     workItem.setState(workItems.get(i).getState());
-                    getList.add(workItem);
+                    workItem.setUserId(workItems.get(i).getUserId());
+                    getWorkItemsList.add(workItem);
 
                 }
             }
@@ -90,7 +94,7 @@ public final class HttpService {
             public void onFailure(Throwable t) {
             }
         });
-        return getList;
+        return getWorkItemsList;
     }
 
     public List<WorkItem> getAllDone() {
@@ -100,7 +104,7 @@ public final class HttpService {
                 .baseUrl(BASE_URL)
                 .build();
 
-        ApiService service = retrofit.create(ApiService.class);
+        ApiRepository service = retrofit.create(ApiRepository.class);
 
         Call<List<WorkItem>> call = service.getAllDone("Done");
 
@@ -117,7 +121,8 @@ public final class HttpService {
                     workItem.setTitle(workItems.get(i).getTitle());
                     workItem.setDescription(workItems.get(i).getDescription());
                     workItem.setState(workItems.get(i).getState());
-                    getList.add(workItem);
+                    workItem.setUserId(workItems.get(i).getUserId());
+                    getWorkItemsList.add(workItem);
 
                 }
             }
@@ -126,7 +131,7 @@ public final class HttpService {
             public void onFailure(Throwable t) {
             }
         });
-        return getList;
+        return getWorkItemsList;
     }
 
     public List<WorkItem> getAllMyTask() {
@@ -136,7 +141,7 @@ public final class HttpService {
                 .baseUrl(BASE_URL)
                 .build();
 
-        ApiService service = retrofit.create(ApiService.class);
+        ApiRepository service = retrofit.create(ApiRepository.class);
 
         Call<List<WorkItem>> call = service.getAllMyTask("getAll");
 
@@ -153,7 +158,8 @@ public final class HttpService {
                     workItem.setTitle(workItems.get(i).getTitle());
                     workItem.setDescription(workItems.get(i).getDescription());
                     workItem.setState(workItems.get(i).getState());
-                    getList.add(workItem);
+                    workItem.setUserId(workItems.get(i).getUserId());
+                    getWorkItemsList.add(workItem);
 
                 }
             }
@@ -162,7 +168,84 @@ public final class HttpService {
             public void onFailure(Throwable t) {
             }
         });
-        return getList;
+        return getWorkItemsList;
+    }
+
+    public List<WorkItem> getAllWorkItemsByTeamId(Long id) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(BASE_URL)
+                .build();
+
+        ApiRepository service = retrofit.create(ApiRepository.class);
+
+        Call<List<WorkItem>> call = service.getAllWorkItemsByTeamId(id);
+
+        call.enqueue(new Callback<List<WorkItem>>() {
+            @Override
+            public void onResponse(Response<List<WorkItem>> response, Retrofit retrofit) {
+
+                List<WorkItem> workItems = response.body();
+
+                for (int i = 0; i < workItems.size(); i++) {
+
+                    WorkItem workItem = new WorkItem();
+                    workItem.setId(workItems.get(i).getId());
+                    workItem.setTitle(workItems.get(i).getTitle());
+                    workItem.setDescription(workItems.get(i).getDescription());
+                    workItem.setState(workItems.get(i).getState());
+                    workItem.setUserId(workItems.get(i).getUserId());
+                    workItem.setIssueId(workItems.get(i).getIssueId());
+                    getWorkItemsList.add(workItem);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
+        return getWorkItemsList;
+    }
+
+    public List<User> getAllUsersByTeamId(Long id) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(BASE_URL)
+                .build();
+
+        ApiRepository service = retrofit.create(ApiRepository.class);
+
+        Call<List<User>> call = service.getAllUsersByTeamId(id);
+
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Response<List<User>> response, Retrofit retrofit) {
+
+                List<User> users = response.body();
+
+                for (int i = 0; i < users.size(); i++) {
+
+                    User user = new User();
+                    user.setId(users.get(i).getId());
+                    user.setFirstName(users.get(i).getFirstName());
+                    user.setLastName(users.get(i).getLastName());
+                    user.setUserName(users.get(i).getUserName());
+                    user.setUserNumber(users.get(i).getUserNumber());
+                    user.setState(users.get(i).getState());
+                    user.setTeamId(users.get(i).getTeamId());
+                    getUsersList.add(user);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
+        return getUsersList;
     }
 
     public WorkItem getWorkItemById(long id) {
@@ -174,7 +257,7 @@ public final class HttpService {
                 .baseUrl(BASE_URL)
                 .build();
 
-        ApiService service = retrofit.create(ApiService.class);
+        ApiRepository service = retrofit.create(ApiRepository.class);
 
         Call<WorkItem> call = service.getWorkItemById(id);
 
@@ -203,7 +286,7 @@ public final class HttpService {
                 .baseUrl(BASE_URL)
                 .build();
 
-        ApiService service = retrofit.create(ApiService.class);
+        ApiRepository service = retrofit.create(ApiRepository.class);
 
         Call<WorkItem> call = service.addWorkItem(new WorkItem(title, description, state));
 
@@ -228,7 +311,7 @@ public final class HttpService {
                 .baseUrl(BASE_URL)
                 .build();
 
-        ApiService service = retrofit.create(ApiService.class);
+        ApiRepository service = retrofit.create(ApiRepository.class);
 
         Call<WorkItem> call = service.updateWorkItemsState(id, workItemWithNewState.setState(state));
 
@@ -253,7 +336,7 @@ public final class HttpService {
                 .baseUrl(BASE_URL)
                 .build();
 
-        ApiService service = retrofit.create(ApiService.class);
+        ApiRepository service = retrofit.create(ApiRepository.class);
 
         Call<WorkItem> call = service.updateWorkItemsTitle(id, workItemWithNewTilte.setTitle(title));
 
@@ -278,7 +361,7 @@ public final class HttpService {
                 .baseUrl(BASE_URL)
                 .build();
 
-        ApiService service = retrofit.create(ApiService.class);
+        ApiRepository service = retrofit.create(ApiRepository.class);
 
         Call<WorkItem> call = service.updateWorkItemsDescription(id, workItemWithNewDescription.setDescription(description));
 
@@ -303,7 +386,7 @@ public final class HttpService {
                 .baseUrl(BASE_URL)
                 .build();
 
-        ApiService service = retrofit.create(ApiService.class);
+        ApiRepository service = retrofit.create(ApiRepository.class);
 
         Call<WorkItem> call = service.assigneeWorkItemToUser(id, workItemWithNewUser.setUserId(userId));
 
@@ -326,7 +409,7 @@ public final class HttpService {
                 .baseUrl(BASE_URL)
                 .build();
 
-        ApiService service = retrofit.create(ApiService.class);
+        ApiRepository service = retrofit.create(ApiRepository.class);
 
         Call<WorkItem> call = service.addWorkItemToIssue(id, new Issue(issue));
 
@@ -341,7 +424,6 @@ public final class HttpService {
             }
         });
     }
-
 
     //POST Method // https://www.youtube.com/watch?v=wg9nG07UvuU
 }

@@ -1,10 +1,12 @@
 package se.groupfish.azizzakiryarov.taskrcasemanagement;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +53,8 @@ public class AddWorkItemsActivity extends AppCompatActivity {
         etUserId = (EditText) findViewById(R.id.et_userId);
         etIssueId = (EditText) findViewById(R.id.et_issueId);
 
+        getAllOverview();
+
         btnPut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,13 +87,6 @@ public class AddWorkItemsActivity extends AppCompatActivity {
             }
         });
 
-        btnGetAllWorkItems.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // get all workitems
-            }
-        });
-
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
@@ -99,6 +96,39 @@ public class AddWorkItemsActivity extends AppCompatActivity {
         }
     }
 
+    void getAllOverview() {
+        btnGetAllWorkItems.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Cursor result = db.getAllOverView();
+                if (result.getCount() == 0) {
+                    showMessage("Error", "No data in SQLite");
+                    return;
+                } else {
+
+                    StringBuffer stringBuffer = new StringBuffer();
+                    while (result.moveToNext()) {
+                        stringBuffer.append("ID: " + "id" + result.getString(0) + "\n");
+                        stringBuffer.append("TITLE: " + "title" + result.getString(1) + "\n");
+                        stringBuffer.append("DESCRIPTION: " + "description" + result.getString(2) + "\n");
+                        stringBuffer.append("STATE: " + "state" + result.getString(3) + "\n");
+                        stringBuffer.append("USERID: " + "userId" + result.getString(4) + "\n");
+                        stringBuffer.append("ISSUEID: " + "issueId" + result.getString(5) + "\n\n");
+                    }
+                    showMessage("Data", stringBuffer.toString());
+                }
+            }
+        });
+    }
+
+    void showMessage(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

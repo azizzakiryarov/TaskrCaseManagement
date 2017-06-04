@@ -1,12 +1,16 @@
 package repository;
 
+import android.database.Cursor;
+
 import java.util.List;
 
 import model.WorkItem;
 
-public interface WorkItemsRepository {
+public interface DBWorkItemsRepository {
 
     boolean addWorkItem(String title, String description, String state, Long userId, Long issueId);
+
+    Cursor getAllOverView();
 
     void updateTitle(Long id, String title);
 
@@ -16,7 +20,7 @@ public interface WorkItemsRepository {
 
     void addWorkItemToUser(Long workItemId, Long userId);
 
-    List<WorkItem> getAllByTeamId();
+    List<WorkItem> getAllByTeamId(Long id);
 
     List<WorkItem> getAllMyTask();
 

@@ -18,6 +18,7 @@ public class TaskDetailsActivity extends AppCompatActivity {
     TextView title;
     TextView description;
     TextView state;
+    TextView assignee;
     Button btnEdit;
 
 
@@ -39,10 +40,12 @@ public class TaskDetailsActivity extends AppCompatActivity {
         title = (TextView) findViewById(R.id.tv_title);
         description = (TextView) findViewById(R.id.tv_description);
         state = (TextView) findViewById(R.id.tv_state);
+        assignee = (TextView) findViewById(R.id.tv_assignee);
 
         title.setText(getIntent().getStringExtra("title"));
         description.setText(getIntent().getStringExtra("description"));
         state.setText(getIntent().getStringExtra("state"));
+        assignee.setText(getIntent().getStringExtra("userId"));
 
         ActionBar actionBar = getSupportActionBar();
 

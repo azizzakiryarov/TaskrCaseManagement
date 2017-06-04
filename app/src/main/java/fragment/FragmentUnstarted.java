@@ -84,8 +84,7 @@ public class FragmentUnstarted extends Fragment {
         public WorkItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent, false);
-            WorkItemViewHolder workItemViewHolder = new WorkItemViewHolder(view, ctx, workItems);
-            return workItemViewHolder;
+            return new WorkItemViewHolder(view, ctx, workItems);
 
         }
 
@@ -135,6 +134,7 @@ public class FragmentUnstarted extends Fragment {
                 intent.putExtra("title", workItem.getTitle());
                 intent.putExtra("description", workItem.getDescription());
                 intent.putExtra("state", workItem.getState());
+                intent.putExtra("userId", workItem.getUserId());
                 this.ctx.startActivity(intent);
 
             }

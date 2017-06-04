@@ -67,7 +67,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="300dp"
         android:backgroundTint="#FFA500"
-        android:text="GET ALL WORKITEMS" />
+        android:text="GET ALL OVERVIEW" />
 
 
     <RelativeLayout

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.WorkItem;
-import repository.WorkItemsRepository;
+import repository.DBWorkItemsRepository;
 
 import static dbhelper.DBContract.WorkItemsEntry.COLUMN_NAME_DESCRIPTION;
 import static dbhelper.DBContract.WorkItemsEntry.COLUMN_NAME_ISSUE_ID;
@@ -20,7 +20,7 @@ import static dbhelper.DBContract.WorkItemsEntry.COLUMN_NAME_TITLE;
 import static dbhelper.DBContract.WorkItemsEntry.COLUMN_NAME_USER_ID;
 import static dbhelper.DBContract.WorkItemsEntry.TABLE_NAME;
 
-public class DatabaseHelper extends SQLiteOpenHelper implements WorkItemsRepository {
+public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepository {
 
     private static final int DATABASE_VERSION = 4;
     private static final String TAG = DatabaseHelper.class.getSimpleName();
@@ -119,6 +119,15 @@ public class DatabaseHelper extends SQLiteOpenHelper implements WorkItemsReposit
     }
 
     @Override
+    public Cursor getAllOverView() {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor result = db.rawQuery("SELECT * FROM " + DBContract.WorkItemsEntry.TABLE_NAME, null);
+        return result;
+
+    }
+
+    @Override
     public void updateTitle(Long id, String title) {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -143,7 +152,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements WorkItemsReposit
     }
 
     @Override
-    public List<WorkItem> getAllByTeamId() {
+    public List<WorkItem> getAllByTeamId(Long id) {
         return null;
     }
 
@@ -181,6 +190,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements WorkItemsReposit
         }
         return allWorkItems;
     }
+
 
     @Override
     public List<WorkItem> getAllUnstarted() {

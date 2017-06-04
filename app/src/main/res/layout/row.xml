@@ -27,8 +27,7 @@
         android:layout_marginLeft="295dp"
         android:layout_marginTop="-20dp"
         android:text="@string/state"
-        android:textColorHint="@android:color/black"
-        android:textColorLink="@android:color/darker_gray"/>
+        android:shadowColor="@android:color/darker_gray"/>
 
 
 </LinearLayout>
