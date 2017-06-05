@@ -138,9 +138,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if (item != null) {
             int id = item.getItemId();
             switch (id) {
+                case R.id.add_team_and_user:
+                    Intent intent1 = new Intent(this, AddTeamAndUserActivity.class);
+                    startActivity(intent1);
+                    break;
                 case R.id.team_details:
-                    Intent intent = new Intent(this, TeamDetailsActivity.class);
-                    startActivity(intent);
+                    Intent intent2 = new Intent(this, TeamDetailsActivity.class);
+                    startActivity(intent2);
+                    break;
                 case R.id.logout:
                     // logout
                 case R.id.search_bar:

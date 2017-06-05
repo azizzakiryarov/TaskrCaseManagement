@@ -13,16 +13,9 @@ import java.util.List;
 import model.WorkItem;
 import repository.DBWorkItemsRepository;
 
-import static dbhelper.DBContract.WorkItemsEntry.COLUMN_NAME_DESCRIPTION;
-import static dbhelper.DBContract.WorkItemsEntry.COLUMN_NAME_ISSUE_ID;
-import static dbhelper.DBContract.WorkItemsEntry.COLUMN_NAME_STATE;
-import static dbhelper.DBContract.WorkItemsEntry.COLUMN_NAME_TITLE;
-import static dbhelper.DBContract.WorkItemsEntry.COLUMN_NAME_USER_ID;
-import static dbhelper.DBContract.WorkItemsEntry.TABLE_NAME;
-
 public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepository {
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 7;
     private static final String TAG = DatabaseHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "TaskrCaseManagement";
     private static final String GET_ALL_WORKITEMS = "SELECT * FROM " + DBContract.WorkItemsEntry.TABLE_NAME;
@@ -49,8 +42,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepos
                 DBContract.WorkItemsEntry.COLUMN_NAME_DESCRIPTION + " TEXT NOT NULL, " +
                 DBContract.WorkItemsEntry.COLUMN_NAME_STATE + " TEXT NOT NULL, " +
                 DBContract.WorkItemsEntry.COLUMN_NAME_USER_ID + " INTEGER DEFAULT NULL, " +
-                DBContract.WorkItemsEntry.COLUMN_NAME_ISSUE_ID + " INTEGER DEFAULT NULL, " +
-                "FOREIGN KEY (" + DBContract.WorkItemsEntry.COLUMN_NAME_ISSUE_ID + ") REFERENCES " + DBContract.WorkItemsEntry.TABLE_NAME + "(" + DBContract.IssueEntry._ID + "), " +
                 "FOREIGN KEY (" + DBContract.WorkItemsEntry.COLUMN_NAME_USER_ID + ") REFERENCES " + DBContract.WorkItemsEntry.TABLE_NAME + "(" + DBContract.UsersEntry._ID + "));";
 
         Log.d(TAG, "onCreate: " + CREATE_TABLE_WORKITEMS);
@@ -60,8 +51,8 @@ public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepos
                 DBContract.UsersEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 DBContract.UsersEntry.COLUMN_NAME_FIRSTNAME + " TEXT NOT NULL, " +
                 DBContract.UsersEntry.COLUMN_NAME_LASTNAME + " TEXT NOT NULL, " +
-                DBContract.UsersEntry.COLUMN_NAME_USER_NAME + " TEXT NOT NULL, " +
-                DBContract.UsersEntry.COLUMN_NAME_USER_NUMBER + " TEXT NOT NULL, " +
+                DBContract.UsersEntry.COLUMN_NAME_USER_NAME + " TEXT NOT NULL UNIQUE, " +
+                DBContract.UsersEntry.COLUMN_NAME_USER_NUMBER + " TEXT NOT NULL UNIQUE, " +
                 DBContract.UsersEntry.COLUMN_NAME_USER_STATE + " TEXT NOT NULL, " +
                 DBContract.UsersEntry.COLUMN_NAME_TEAMID + " INTEGER DEFAULT NULL, " +
                 "FOREIGN KEY (" + DBContract.UsersEntry.COLUMN_NAME_TEAMID + ") REFERENCES " + DBContract.UsersEntry.TABLE_NAME + "(" + DBContract.TeamsEntry._ID + "));";
@@ -99,26 +90,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepos
     }
 
     @Override
-    public boolean addWorkItem(String title, String description, String state, Long userId, Long issueId) {
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_NAME_TITLE, title);
-        contentValues.put(COLUMN_NAME_DESCRIPTION, description);
-        contentValues.put(COLUMN_NAME_STATE, state);
-        contentValues.put(COLUMN_NAME_USER_ID, userId);
-        contentValues.put(COLUMN_NAME_ISSUE_ID, issueId);
-        long result = db.insert(TABLE_NAME, null, contentValues);
-        Log.d(TAG, "onClick: added workItem  " + contentValues.toString());
-
-        if (result == -1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    @Override
     public Cursor getAllOverView() {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -128,26 +99,57 @@ public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepos
     }
 
     @Override
-    public void updateTitle(Long id, String title) {
+    public Cursor getAllTeams() {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor result = db.rawQuery("SELECT * FROM " + DBContract.TeamsEntry.TABLE_NAME, null);
+        return result;
+    }
+
+    @Override
+    public Cursor getAllUsers() {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor result = db.rawQuery("SELECT * FROM " + DBContract.UsersEntry.TABLE_NAME, null);
+        return result;
+    }
+
+    @Override
+    public void addTeam(String teamName, String state) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-
-
-    }
-
-    @Override
-    public void updateDescriptoin(Long id, String description) {
+        contentValues.put("teamName", teamName);
+        contentValues.put("state", state);
+        db.insert(DBContract.TeamsEntry.TABLE_NAME, null, contentValues);
 
     }
 
     @Override
-    public void updateState(Long id, String state) {
+    public void addUser(String firstName, String lastName, String userName, String userNumber, String state, Long teamId) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("firstName", firstName);
+        contentValues.put("lastName", lastName);
+        contentValues.put("userName", userName);
+        contentValues.put("userNumber", userNumber);
+        contentValues.put("state", state);
+        contentValues.put("teamId", teamId);
+        db.insert(DBContract.UsersEntry.TABLE_NAME, null, contentValues);
 
     }
 
     @Override
-    public void addWorkItemToUser(Long workItemId, Long userId) {
+    public void addWorkItem(String title, String descrpition, String state, Long userId) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("title", title);
+        contentValues.put("description", descrpition);
+        contentValues.put("state", state);
+        contentValues.put("userId", userId);
+        db.insert(DBContract.WorkItemsEntry.TABLE_NAME, null, contentValues);
 
     }
 
@@ -206,4 +208,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepos
     public List<WorkItem> getAllDone() {
         return null;
     }
+
+    //How to Include Database in app https://www.youtube.com/watch?v=iE_bsPfB00w
+
 }

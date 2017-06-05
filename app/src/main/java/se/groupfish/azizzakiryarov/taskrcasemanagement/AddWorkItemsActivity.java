@@ -4,12 +4,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -22,8 +20,9 @@ import http.HttpService;
 public class AddWorkItemsActivity extends AppCompatActivity {
 
     private final String TAG = AddWorkItemsActivity.class.getSimpleName();
-    HttpService httpService = new HttpService();
-    DatabaseHelper db;
+    HttpService httpService;
+    DatabaseHelper databaseHelper;
+    Cursor result = null;
 
     Button btnPost;
     Button btnPut;
@@ -41,7 +40,8 @@ public class AddWorkItemsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_work_items);
 
-        db = new DatabaseHelper(this);
+        databaseHelper = new DatabaseHelper(this);
+        httpService = new HttpService();
 
         btnPost = (Button) findViewById(R.id.btn_post);
         btnPut = (Button) findViewById(R.id.btn_put);
@@ -51,9 +51,9 @@ public class AddWorkItemsActivity extends AppCompatActivity {
         etDescription = (EditText) findViewById(R.id.et_description);
         etState = (EditText) findViewById(R.id.et_state);
         etUserId = (EditText) findViewById(R.id.et_userId);
-        etIssueId = (EditText) findViewById(R.id.et_issueId);
 
-        getAllOverview();
+
+        getAllWorkItems();
 
         btnPut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,17 +71,15 @@ public class AddWorkItemsActivity extends AppCompatActivity {
                 String description = etDescription.getText().toString();
                 String state = etState.getText().toString();
                 Long userId = Long.valueOf(etUserId.getText().toString());
-                Long issueId = Long.valueOf(etIssueId.getText().toString());
+
 
                 //ONLINE
                 //httpService.addWorkItem(title, description, state);
                 //Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to Server...", Toast.LENGTH_SHORT).show();
 
-
                 //OFFLINE
-                db.addWorkItem(title, description, state, userId, issueId);
+                databaseHelper.addWorkItem(title, description, state, userId);
                 Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to SQLite...", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onClick: WorkItem added");
 
 
             }
@@ -96,26 +94,22 @@ public class AddWorkItemsActivity extends AppCompatActivity {
         }
     }
 
-    void getAllOverview() {
+    void getAllWorkItems() {
         btnGetAllWorkItems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Cursor result = db.getAllOverView();
-                if (result.getCount() == 0) {
-                    showMessage("Error", "No data in SQLite");
-                    return;
-                } else {
 
-                    StringBuffer stringBuffer = new StringBuffer();
-                    while (result.moveToNext()) {
-                        stringBuffer.append("ID: " + "id" + result.getString(0) + "\n");
-                        stringBuffer.append("TITLE: " + "title" + result.getString(1) + "\n");
-                        stringBuffer.append("DESCRIPTION: " + "description" + result.getString(2) + "\n");
-                        stringBuffer.append("STATE: " + "state" + result.getString(3) + "\n");
-                        stringBuffer.append("USERID: " + "userId" + result.getString(4) + "\n");
-                        stringBuffer.append("ISSUEID: " + "issueId" + result.getString(5) + "\n\n");
-                    }
-                    showMessage("Data", stringBuffer.toString());
+                Toast.makeText(AddWorkItemsActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                result = databaseHelper.getAllOverView();
+                if (result.moveToFirst()) {
+                    do {
+                        Toast.makeText(AddWorkItemsActivity.this,
+                                "id: " + result.getString(0) + "\n" +
+                                        "title: " + result.getString(1) + "\n" +
+                                        "description: " + result.getString(2) + "\n" +
+                                        "state: " + result.getString(3) + "\n" +
+                                        "userId: " + result.getString(4), Toast.LENGTH_SHORT).show();
+                    } while (result.moveToNext());
                 }
             }
         });

@@ -3,6 +3,7 @@
     package="se.groupfish.azizzakiryarov.taskrcasemanagement">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -36,7 +37,8 @@
             android:exported="true" />
 
         <activity android:name=".AddWorkItemsActivity" />
-        <activity android:name=".EditAssigneeWorkItemsActivity"></activity>
+        <activity android:name=".EditAssigneeWorkItemsActivity" />
+        <activity android:name=".AddTeamAndUserActivity"></activity>
     </application>
 
 </manifest>

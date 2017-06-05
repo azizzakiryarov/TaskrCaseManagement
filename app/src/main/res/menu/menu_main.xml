@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/add_team_and_user"
+        android:title="Add Team | User" />
+
+    <item
         android:id="@+id/team_details"
         android:title="@string/team_details" />
 

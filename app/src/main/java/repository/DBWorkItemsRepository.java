@@ -8,17 +8,12 @@ import model.WorkItem;
 
 public interface DBWorkItemsRepository {
 
-    boolean addWorkItem(String title, String description, String state, Long userId, Long issueId);
 
-    Cursor getAllOverView();
+    void addTeam(String teamName, String state);
 
-    void updateTitle(Long id, String title);
+    void addUser(String firstName, String lastName, String userName, String userNumber, String state, Long teamId);
 
-    void updateDescriptoin(Long id, String description);
-
-    void updateState(Long id, String state);
-
-    void addWorkItemToUser(Long workItemId, Long userId);
+    void addWorkItem(String title, String descrpition, String state, Long userId);
 
     List<WorkItem> getAllByTeamId(Long id);
 
@@ -30,4 +25,9 @@ public interface DBWorkItemsRepository {
 
     List<WorkItem> getAllDone();
 
+    Cursor getAllOverView();
+
+    Cursor getAllTeams();
+
+    Cursor getAllUsers();
 }

@@ -2,10 +2,10 @@ package se.groupfish.azizzakiryarov.taskrcasemanagement;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,7 +20,6 @@ import java.util.List;
 
 import dbhelper.DatabaseHelper;
 import http.HttpService;
-import model.Team;
 import model.User;
 import model.WorkItem;
 
@@ -43,10 +42,6 @@ public class TeamDetailsActivity extends AppCompatActivity {
         tvDescription = (TextView) findViewById(R.id.team_description);
 
         httpService = new HttpService();
-
-        //List<User> getAllUsers = httpService.getAllUsersByTeamId(1L);
-        Team team = new Team();
-
 
         btnOverview = (Button) findViewById(R.id.btn_overview);
         btnEdit = (Button) findViewById(R.id.btn_edit_team);
@@ -134,7 +129,7 @@ public class TeamDetailsActivity extends AppCompatActivity {
 
             UsersViewHolder(View itemView) {
                 super(itemView);
-                tvMembers = (TextView) findViewById(R.id.tvMembers);
+                this.tvMembers = (TextView) findViewById(R.id.tvMembers);
             }
 
             void bindView(final User user) {

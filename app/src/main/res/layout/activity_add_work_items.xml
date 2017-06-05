@@ -52,12 +52,6 @@
         android:layout_marginTop="200dp"
         android:hint="assignee user ID" />
 
-    <EditText
-        android:id="@+id/et_issueId"
-        android:layout_width="382dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="250dp"
-        android:hint="issue" />
 
     <Button
         android:id="@+id/btn_getAll"
@@ -65,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="250dp"
         android:backgroundTint="#FFA500"
         android:text="GET ALL OVERVIEW" />
 
