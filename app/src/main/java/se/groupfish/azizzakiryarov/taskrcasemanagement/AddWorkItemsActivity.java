@@ -20,7 +20,7 @@ import http.HttpService;
 public class AddWorkItemsActivity extends AppCompatActivity {
 
     private final String TAG = AddWorkItemsActivity.class.getSimpleName();
-    HttpService httpService;
+    HttpService httpService = new HttpService();
     DatabaseHelper databaseHelper;
     Cursor result = null;
 
@@ -32,7 +32,6 @@ public class AddWorkItemsActivity extends AppCompatActivity {
     EditText etDescription;
     EditText etState;
     EditText etUserId;
-    EditText etIssueId;
 
 
     @Override
@@ -41,7 +40,6 @@ public class AddWorkItemsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_work_items);
 
         databaseHelper = new DatabaseHelper(this);
-        httpService = new HttpService();
 
         btnPost = (Button) findViewById(R.id.btn_post);
         btnPut = (Button) findViewById(R.id.btn_put);
@@ -74,13 +72,12 @@ public class AddWorkItemsActivity extends AppCompatActivity {
 
 
                 //ONLINE
-                //httpService.addWorkItem(title, description, state);
-                //Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to Server...", Toast.LENGTH_SHORT).show();
+                httpService.addWorkItem(title, description, state);
+                Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to Server...", Toast.LENGTH_SHORT).show();
 
                 //OFFLINE
-                databaseHelper.addWorkItem(title, description, state, userId);
-                Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to SQLite...", Toast.LENGTH_SHORT).show();
-
+                //databaseHelper.addWorkItem(title, description, state, userId);
+                //Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to SQLite...", Toast.LENGTH_SHORT).show();
 
             }
         });

@@ -8,14 +8,13 @@ import model.WorkItem;
 
 public interface DBWorkItemsRepository {
 
-
     void addTeam(String teamName, String state);
 
     void addUser(String firstName, String lastName, String userName, String userNumber, String state, Long teamId);
 
     void addWorkItem(String title, String descrpition, String state, Long userId);
 
-    List<WorkItem> getAllByTeamId(Long id);
+    List<WorkItem> getAllByTeamId();
 
     List<WorkItem> getAllMyTask();
 
@@ -30,4 +29,6 @@ public interface DBWorkItemsRepository {
     Cursor getAllTeams();
 
     Cursor getAllUsers();
+
+    Cursor getAllWorkItemsTitle();
 }

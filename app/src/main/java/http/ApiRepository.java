@@ -7,23 +7,16 @@ import model.User;
 import model.WorkItem;
 import retrofit.Call;
 import retrofit.http.Body;
-import retrofit.http.Field;
 import retrofit.http.GET;
-import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PUT;
-import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
-import retrofit.http.QueryMap;
 
 public interface ApiRepository {
 
     @GET("/workitems/getByState")
     Call<List<WorkItem>> getAllUnstarted(@Query("state") String state);
-
-    @GET("/workitems/getById/{id}")
-    Call<WorkItem> getWorkItemById(@Path("id") Long id);
 
     @GET("/workitems/getByState")
     Call<List<WorkItem>> getAllStarted(@Query("state") String state);
@@ -33,6 +26,10 @@ public interface ApiRepository {
 
     @GET("/workitems/getAllWorkItemsWithIssues/{getAll}")
     Call<List<WorkItem>> getAllMyTask(@Path("getAll") String getAll);
+
+    @GET("/workitems/getById/{id}")
+    Call<WorkItem> getWorkItemById(@Path("id") Long id);
+
 
     @POST("/workitems")
     Call<WorkItem> addWorkItem(@Body WorkItem workItem);

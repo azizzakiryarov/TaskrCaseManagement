@@ -15,7 +15,7 @@ import repository.DBWorkItemsRepository;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepository {
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
     private static final String TAG = DatabaseHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "TaskrCaseManagement";
     private static final String GET_ALL_WORKITEMS = "SELECT * FROM " + DBContract.WorkItemsEntry.TABLE_NAME;
@@ -115,6 +115,14 @@ public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepos
     }
 
     @Override
+    public Cursor getAllWorkItemsTitle() {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor result = db.rawQuery("SELECT title FROM " + DBContract.UsersEntry.TABLE_NAME, null);
+        return result;
+    }
+
+    @Override
     public void addTeam(String teamName, String state) {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -154,8 +162,38 @@ public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepos
     }
 
     @Override
-    public List<WorkItem> getAllByTeamId(Long id) {
-        return null;
+    public List<WorkItem> getAllByTeamId() {
+
+        List<WorkItem> allWorkItems = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DBContract.WorkItemsEntry.TABLE_NAME + " w, Team t WHERE t.id = 1;", null);
+
+        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+            int longIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry._ID);
+            int titleIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_TITLE);
+            int descriptionIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_DESCRIPTION);
+            int stateIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_STATE);
+
+            do {
+                long id = cursor.getLong(longIndex);
+                String title = cursor.getString(titleIndex);
+                String description = cursor.getString(descriptionIndex);
+                String state = cursor.getString(stateIndex);
+
+                WorkItem workItem = new WorkItem();
+                workItem.setId(id);
+                workItem.setTitle(title);
+                workItem.setDescription(description);
+                workItem.setState(state);
+
+                allWorkItems.add(workItem);
+
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return allWorkItems;
     }
 
     @Override

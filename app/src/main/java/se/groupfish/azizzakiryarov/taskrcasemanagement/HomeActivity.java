@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import adapter.PagerAdapter;
 import dbhelper.DatabaseHelper;
@@ -26,10 +27,9 @@ import fragment.FragmentMyTask;
 import fragment.FragmentStarted;
 import fragment.FragmentUnstarted;
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener, SearchView.OnSuggestionListener {
 
     DatabaseHelper databaseHelper;
-
     ViewPager viewPager;
     SearchView searchView;
 
@@ -46,11 +46,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         databaseHelper = new DatabaseHelper(this);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
+
         pUnstarted = (ProgressBar) findViewById(R.id.UNSTARTED);
         pStarted = (ProgressBar) findViewById(R.id.STARTED);
         pDone = (ProgressBar) findViewById(R.id.DONE);
         pMytask = (ProgressBar) findViewById(R.id.MyTask);
-
 
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
@@ -115,21 +115,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        //actionSearchView(menu);        This function will work when vi will create DB
-        // link för att forsätta         https://www.youtube.com/watch?v=Aa3m7jrtudI#t=106.187586
-
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
-    public void actionSearchView(Menu menu) {
-
-        MenuItem menuItem = menu.findItem(R.id.search_bar);
+        MenuItem menuItem = menu.findItem(R.id.searchBar);
         searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, HomeActivity.class)));
+        searchView.setOnSuggestionListener(this);
+
+        return true;
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -147,11 +144,21 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(intent2);
                     break;
                 case R.id.logout:
-                    // logout
-                case R.id.search_bar:
-                    //search
+                    onBackPressed();
+                    break;
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onSuggestionSelect(int position) {
+        return true;
+    }
+
+    @Override
+    public boolean onSuggestionClick(int position) {
+        Toast.makeText(HomeActivity.this, "Selected", Toast.LENGTH_SHORT).show();
+        return true;
     }
 }
