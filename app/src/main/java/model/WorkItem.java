@@ -22,7 +22,7 @@ public class WorkItem {
     @SerializedName("userId")
     @Expose
     private Long userId;
-    @SerializedName("userId")
+    @SerializedName("issueId")
     @Expose
     private Long issueId;
 

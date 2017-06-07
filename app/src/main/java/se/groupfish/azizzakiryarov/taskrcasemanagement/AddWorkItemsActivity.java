@@ -76,8 +76,8 @@ public class AddWorkItemsActivity extends AppCompatActivity {
                 Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to Server...", Toast.LENGTH_SHORT).show();
 
                 //OFFLINE
-                //databaseHelper.addWorkItem(title, description, state, userId);
-                //Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to SQLite...", Toast.LENGTH_SHORT).show();
+                databaseHelper.addWorkItem(title, description, state, userId);
+                Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to SQLite...", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -95,6 +95,7 @@ public class AddWorkItemsActivity extends AppCompatActivity {
         btnGetAllWorkItems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
                 Toast.makeText(AddWorkItemsActivity.this, "Success", Toast.LENGTH_SHORT).show();
                 result = databaseHelper.getAllOverView();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 import http.HttpService;
 import model.WorkItem;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.AddWorkItemsActivity;
-
 import se.groupfish.azizzakiryarov.taskrcasemanagement.R;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.TaskDetailsActivity;
 
@@ -28,6 +28,7 @@ public class FragmentUnstarted extends Fragment {
 
     HttpService httpService = new HttpService();
     FloatingActionButton floatingActionButton;
+    ArrayList<WorkItem> workItems;
 
 
     public static Fragment newInstance() {
@@ -59,15 +60,34 @@ public class FragmentUnstarted extends Fragment {
             }
         });
 
-        ArrayList<WorkItem> workItems = (ArrayList<WorkItem>) httpService.getAllUnstarted();
+        /*
+        httpService.getAllUnstarted(new OnResultListener() {
+            public void onResilt(List<WorkItem> workItemList) {
+                final WorkItemListAdapter adapter = new WorkItemListAdapter(workItems, getContext());
+                final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_view_UNSTARTED);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            }
+        });
+        */
 
-        WorkItemListAdapter adapter = new WorkItemListAdapter(workItems, getContext());
+        workItems = (ArrayList<WorkItem>) httpService.getAllUnstarted();
+
+        final WorkItemListAdapter adapter = new WorkItemListAdapter(workItems, getContext());
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_view_UNSTARTED);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        }, 56);
+
         return view;
     }
+
 
     private static final class WorkItemListAdapter extends RecyclerView.Adapter<WorkItemListAdapter.WorkItemViewHolder> {
         ArrayList<WorkItem> workItems;
@@ -75,7 +95,6 @@ public class FragmentUnstarted extends Fragment {
 
 
         private WorkItemListAdapter(ArrayList<WorkItem> workItems, Context ctx) {
-
             this.workItems = workItems;
             this.ctx = ctx;
         }
@@ -139,6 +158,13 @@ public class FragmentUnstarted extends Fragment {
 
             }
         }
+    }
+
+    public void setFilter(ArrayList<WorkItem> newList) {
+
+        workItems = new ArrayList<WorkItem>();
+        workItems.addAll(newList);
+        notifyAll();
     }
 }
 

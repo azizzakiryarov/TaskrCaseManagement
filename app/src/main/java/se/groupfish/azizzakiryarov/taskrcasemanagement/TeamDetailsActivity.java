@@ -18,14 +18,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import dbhelper.DatabaseHelper;
 import http.HttpService;
+import model.Team;
 import model.User;
 import model.WorkItem;
 
 public class TeamDetailsActivity extends AppCompatActivity {
 
-    DatabaseHelper db;
     HttpService httpService;
     Button btnOverview;
     Button btnEdit;
@@ -42,6 +41,11 @@ public class TeamDetailsActivity extends AppCompatActivity {
         tvDescription = (TextView) findViewById(R.id.team_description);
 
         httpService = new HttpService();
+
+        Team team = httpService.getTeamById(1l);
+
+        tvTeamName.setText(team.getTeamName());
+        tvDescription.setText("GroupFish was created by Emil Lindblom");
 
         btnOverview = (Button) findViewById(R.id.btn_overview);
         btnEdit = (Button) findViewById(R.id.btn_edit_team);
@@ -125,15 +129,21 @@ public class TeamDetailsActivity extends AppCompatActivity {
 
         final class UsersViewHolder extends RecyclerView.ViewHolder {
 
-            private final TextView tvMembers;
+            private final TextView tvFirstName;
+            private final TextView tvLastName;
+            private final TextView tvUserName;
 
             UsersViewHolder(View itemView) {
                 super(itemView);
-                this.tvMembers = (TextView) findViewById(R.id.tvMembers);
+                this.tvFirstName = (TextView) findViewById(R.id.tvFirstName);
+                this.tvLastName = (TextView) findViewById(R.id.tvLastName);
+                this.tvUserName = (TextView) findViewById(R.id.tvUserName);
             }
 
             void bindView(final User user) {
-                tvMembers.setText(user.getUserName());
+                tvFirstName.setText(user.getFirstName());
+                tvLastName.setText(user.getLastName());
+                tvUserName.setText(user.getUserName());
             }
         }
     }

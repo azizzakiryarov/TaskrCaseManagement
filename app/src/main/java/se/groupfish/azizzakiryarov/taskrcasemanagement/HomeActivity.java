@@ -1,8 +1,5 @@
 package se.groupfish.azizzakiryarov.taskrcasemanagement;
 
-import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,18 +13,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import adapter.PagerAdapter;
 import dbhelper.DatabaseHelper;
-import fragment.FragmentDone;
-import fragment.FragmentMyTask;
-import fragment.FragmentStarted;
 import fragment.FragmentUnstarted;
+import model.WorkItem;
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener, SearchView.OnSuggestionListener {
+public class HomeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     DatabaseHelper databaseHelper;
     ViewPager viewPager;
@@ -89,48 +84,19 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         alertDialog.show();
     }
 
-
-    // This is not working...
-    @Override
-    public void onClick(View v) {
-
-        int id = v.getId();
-        switch (id) {
-            case R.id.UNSTARTED:
-                Intent intent1 = new Intent(HomeActivity.this, FragmentUnstarted.class);
-                startActivity(intent1);
-            case R.id.STARTED:
-                Intent intent2 = new Intent(HomeActivity.this, FragmentStarted.class);
-                startActivity(intent2);
-            case R.id.DONE:
-                Intent intent3 = new Intent(HomeActivity.this, FragmentDone.class);
-                startActivity(intent3);
-            case R.id.MyTask:
-                Intent intent4 = new Intent(HomeActivity.this, FragmentMyTask.class);
-                startActivity(intent4);
-        }
-
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         MenuItem menuItem = menu.findItem(R.id.searchBar);
         searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, HomeActivity.class)));
-        searchView.setOnSuggestionListener(this);
-
+        searchView.setOnQueryTextListener(this);
         return true;
 
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
 
         if (item != null) {
             int id = item.getItemId();
@@ -152,13 +118,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public boolean onSuggestionSelect(int position) {
-        return true;
+    public boolean onQueryTextSubmit(String query) {
+        return false;
     }
 
     @Override
-    public boolean onSuggestionClick(int position) {
-        Toast.makeText(HomeActivity.this, "Selected", Toast.LENGTH_SHORT).show();
-        return true;
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }

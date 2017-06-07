@@ -3,6 +3,7 @@ package http;
 import java.util.List;
 
 import model.Issue;
+import model.Team;
 import model.User;
 import model.WorkItem;
 import retrofit.Call;
@@ -54,5 +55,8 @@ public interface ApiRepository {
 
     @GET("/users/{teamId}")
     Call<List<User>> getAllUsersByTeamId(@Path("teamId") Long teamId);
+
+    @GET("/teams/{teamId}")
+    Call<Team> getTeamById(@Path("teamId") Long teamId);
 
 }

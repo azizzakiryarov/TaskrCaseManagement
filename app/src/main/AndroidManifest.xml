@@ -3,7 +3,6 @@
     package="se.groupfish.azizzakiryarov.taskrcasemanagement">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -15,34 +14,12 @@
         <activity android:name=".LogInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-          <!-->
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-
-                <!-->
         </activity>
         <activity android:name=".HomeActivity" />
         <activity android:name=".TaskDetailsActivity" />
         <activity android:name=".TeamDetailsActivity" />
-
-        <!-->
-
-        <provider
-            android:name=".WorkItemsProvider"
-            android:authorities="se.groupfish.azizzakiryarov.taskrcasemanagement.workitemsuggesion"
-            android:enabled="true"
-            android:exported="true" />
-
-            <!-->
-
         <activity android:name=".AddWorkItemsActivity" />
         <activity android:name=".EditAssigneeWorkItemsActivity" />
         <activity android:name=".AddTeamAndUserActivity"></activity>

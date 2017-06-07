@@ -1,5 +1,7 @@
 package http;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -7,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Issue;
+import model.Team;
 import model.User;
 import model.WorkItem;
 import retrofit.Call;
@@ -25,6 +28,8 @@ public final class HttpService {
 
     public List<WorkItem> getAllUnstarted() {
 
+        final List<WorkItem> getWorkItemsListUnstarted = new ArrayList<>();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BASE_URL)
@@ -41,23 +46,30 @@ public final class HttpService {
                 List<WorkItem> workItems = response.body();
 
                 for (int i = 0; i < workItems.size(); i++) {
-
                     WorkItem workItem = new WorkItem();
                     workItem.setId(workItems.get(i).getId());
                     workItem.setTitle(workItems.get(i).getTitle());
                     workItem.setDescription(workItems.get(i).getDescription());
                     workItem.setState(workItems.get(i).getState());
                     workItem.setUserId(workItems.get(i).getUserId());
-                    getWorkItemsList.add(workItem);
+                    getWorkItemsListUnstarted.add(workItem);
 
                 }
+
+
+/*
+
+                listener.onResult(workItems);
+                */
             }
 
             @Override
             public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
-        return getWorkItemsList;
+
+        return getWorkItemsListUnstarted;
     }
 
     public List<WorkItem> getAllStarted() {
@@ -424,6 +436,37 @@ public final class HttpService {
             }
         });
     }
+
+    public Team getTeamById(long id) {
+
+        final Team getTeam = new Team();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(BASE_URL)
+                .build();
+
+        ApiRepository service = retrofit.create(ApiRepository.class);
+
+        Call<Team> call = service.getTeamById(id);
+
+        call.enqueue(new Callback<Team>() {
+            @Override
+            public void onResponse(Response<Team> response, Retrofit retrofit) {
+
+                Team team = response.body();
+                getTeam.setTeamName(team.getTeamName());
+                getTeam.setState(team.getState());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+        return getTeam;
+    }
+
 
     //POST Method // https://www.youtube.com/watch?v=wg9nG07UvuU
 }

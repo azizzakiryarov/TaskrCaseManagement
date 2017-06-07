@@ -29,13 +29,14 @@ public class PagerAdapter extends FragmentPagerAdapter {
             case 3:
                 return new FragmentMyTask();
             default:
-                break;
+                return null;
         }
-        return null;
     }
 
     @Override
     public int getCount() {
         return 4;
     }
+
+
 }
