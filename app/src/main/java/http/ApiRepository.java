@@ -53,10 +53,10 @@ public interface ApiRepository {
     @GET("/workitems")
     Call<List<WorkItem>> getAllWorkItemsByTeamId(@Query("teamId") Long id);
 
-    @GET("/users/{teamId}")
-    Call<List<User>> getAllUsersByTeamId(@Path("teamId") Long teamId);
+    @GET("/users/{id}")
+    Call<List<User>> getAllUsersByTeamId(@Path("id") Long id);
 
-    @GET("/teams/{teamId}")
-    Call<Team> getTeamById(@Path("teamId") Long teamId);
+    @GET("/teams/{id}")
+    Call<Team> getTeamById(@Path("id") Long id);
 
 }

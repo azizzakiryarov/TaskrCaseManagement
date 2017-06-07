@@ -3,6 +3,7 @@ package se.groupfish.azizzakiryarov.taskrcasemanagement;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,7 @@ public class TeamDetailsActivity extends AppCompatActivity {
     Button btnEdit;
     TextView tvTeamName;
     TextView tvDescription;
+    ArrayList<User> users;
 
 
     @Override
@@ -65,9 +67,17 @@ public class TeamDetailsActivity extends AppCompatActivity {
             actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         }
 
+        final UsersListAdapter adapter = new UsersListAdapter((ArrayList<User>) httpService.getAllUsersByTeamId(1l));
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.Members);
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new UsersListAdapter((ArrayList<User>) httpService.getAllUsersByTeamId(1l)));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        }, 50);
     }
 
     @Override
@@ -135,12 +145,12 @@ public class TeamDetailsActivity extends AppCompatActivity {
 
             UsersViewHolder(View itemView) {
                 super(itemView);
-                this.tvFirstName = (TextView) findViewById(R.id.tvFirstName);
-                this.tvLastName = (TextView) findViewById(R.id.tvLastName);
-                this.tvUserName = (TextView) findViewById(R.id.tvUserName);
+                this.tvFirstName = (TextView) itemView.findViewById(R.id.tvFirstName);
+                this.tvLastName = (TextView) itemView.findViewById(R.id.tvLastName);
+                this.tvUserName = (TextView) itemView.findViewById(R.id.tvUserName);
             }
 
-            void bindView(final User user) {
+            void bindView(User user) {
                 tvFirstName.setText(user.getFirstName());
                 tvLastName.setText(user.getLastName());
                 tvUserName.setText(user.getUserName());

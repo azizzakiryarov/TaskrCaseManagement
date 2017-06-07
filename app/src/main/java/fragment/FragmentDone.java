@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -59,10 +60,17 @@ public class FragmentDone extends Fragment {
 
         ArrayList<WorkItem> workItems = (ArrayList<WorkItem>) httpService.getAllDone();
 
-        FragmentDone.WorkItemListAdapter adapter = new FragmentDone.WorkItemListAdapter(workItems, getContext());
+        final FragmentDone.WorkItemListAdapter adapter = new FragmentDone.WorkItemListAdapter(workItems, getContext());
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_view_DONE);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        }, 56);
 
         return view;
     }

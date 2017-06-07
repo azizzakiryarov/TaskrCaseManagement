@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -15,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import http.HttpService;
 import model.WorkItem;
@@ -60,10 +60,17 @@ public class FragmentMyTask extends Fragment {
 
         ArrayList<WorkItem> workItems = (ArrayList<WorkItem>) httpService.getAllMyTask();
 
-        FragmentMyTask.WorkItemListAdapter adapter = new FragmentMyTask.WorkItemListAdapter(workItems, getContext());
+        final FragmentMyTask.WorkItemListAdapter adapter = new FragmentMyTask.WorkItemListAdapter(workItems, getContext());
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_view_MYTASK);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        }, 50);
 
         return view;
     }

@@ -3,10 +3,6 @@ package model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by azizzakiryarov on 2017-06-03.
- */
-
 public class Team {
 
     @SerializedName("id")

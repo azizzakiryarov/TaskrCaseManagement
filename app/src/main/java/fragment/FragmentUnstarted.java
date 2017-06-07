@@ -83,7 +83,7 @@ public class FragmentUnstarted extends Fragment {
             public void run() {
                 adapter.notifyDataSetChanged();
             }
-        }, 56);
+        }, 50);
 
         return view;
     }

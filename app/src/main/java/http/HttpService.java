@@ -24,7 +24,7 @@ public final class HttpService {
     private static final String BASE_URL = "http://10.0.2.2:8080";
     private static final Gson gson = new GsonBuilder().create();
     private List<WorkItem> getWorkItemsList = new ArrayList<>();
-    private List<User> getUsersList = new ArrayList<>();
+    private Team getTeamById;
 
     public List<WorkItem> getAllUnstarted() {
 
@@ -55,10 +55,7 @@ public final class HttpService {
                     getWorkItemsListUnstarted.add(workItem);
 
                 }
-
-
 /*
-
                 listener.onResult(workItems);
                 */
             }
@@ -68,7 +65,6 @@ public final class HttpService {
                 Log.e("FAILURE", t.getMessage(), t);
             }
         });
-
         return getWorkItemsListUnstarted;
     }
 
@@ -104,6 +100,7 @@ public final class HttpService {
 
             @Override
             public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
         return getWorkItemsList;
@@ -141,6 +138,7 @@ public final class HttpService {
 
             @Override
             public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
         return getWorkItemsList;
@@ -178,6 +176,7 @@ public final class HttpService {
 
             @Override
             public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
         return getWorkItemsList;
@@ -216,12 +215,15 @@ public final class HttpService {
 
             @Override
             public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
         return getWorkItemsList;
     }
 
     public List<User> getAllUsersByTeamId(Long id) {
+
+        final ArrayList<User> getAllUsersByTeamId = new ArrayList<>();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -248,19 +250,20 @@ public final class HttpService {
                     user.setUserNumber(users.get(i).getUserNumber());
                     user.setState(users.get(i).getState());
                     user.setTeamId(users.get(i).getTeamId());
-                    getUsersList.add(user);
+                    getAllUsersByTeamId.add(user);
 
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
-        return getUsersList;
+        return getAllUsersByTeamId;
     }
 
-    public WorkItem getWorkItemById(long id) {
+    public WorkItem getWorkItemById(Long id) {
 
         final WorkItem getWorkItem = new WorkItem();
 
@@ -285,7 +288,7 @@ public final class HttpService {
 
             @Override
             public void onFailure(Throwable t) {
-
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
         return getWorkItem;
@@ -310,6 +313,7 @@ public final class HttpService {
 
             @Override
             public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
     }
@@ -335,6 +339,7 @@ public final class HttpService {
 
             @Override
             public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
     }
@@ -360,6 +365,7 @@ public final class HttpService {
 
             @Override
             public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
     }
@@ -385,6 +391,7 @@ public final class HttpService {
 
             @Override
             public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
     }
@@ -410,6 +417,7 @@ public final class HttpService {
 
             @Override
             public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
     }
@@ -433,13 +441,13 @@ public final class HttpService {
 
             @Override
             public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
     }
 
-    public Team getTeamById(long id) {
+    public Team getTeamById(Long id) {
 
-        final Team getTeam = new Team();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -454,20 +462,18 @@ public final class HttpService {
             @Override
             public void onResponse(Response<Team> response, Retrofit retrofit) {
 
+                getTeamById = new Team();
                 Team team = response.body();
-                getTeam.setTeamName(team.getTeamName());
-                getTeam.setState(team.getState());
+                getTeamById.setTeamName(team.getTeamName());
             }
 
             @Override
             public void onFailure(Throwable t) {
-
+                Log.e("FAILURE", t.getMessage(), t);
             }
         });
-        return getTeam;
+        return getTeamById;
     }
-
-
     //POST Method // https://www.youtube.com/watch?v=wg9nG07UvuU
 }
 
