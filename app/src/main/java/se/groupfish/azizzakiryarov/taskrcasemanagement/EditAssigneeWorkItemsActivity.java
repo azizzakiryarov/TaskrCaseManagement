@@ -110,7 +110,7 @@ public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
         if (actionBar != null)
 
         {
-            actionBar.setTitle("Edit | Assignee workItems");
+            actionBar.setTitle("Edit | Assignee getAllWorkItems");
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         }

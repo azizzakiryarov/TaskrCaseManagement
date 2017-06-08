@@ -3,17 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/team_details"
-        android:title="@string/team_details" />
-
-    <item
-        android:id="@+id/logout"
-        android:title="@string/log_out" />
-
-    <item
-        android:id="@+id/searchBar"
+        android:id="@+id/searchByWorkItems"
         android:icon="@drawable/ic_search_black"
         android:title="@string/search_bar"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
+
 </menu>

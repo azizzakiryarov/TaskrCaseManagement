@@ -57,9 +57,6 @@ public final class HttpService {
                     getAllWorkItemsUnstarted.add(workItem);
 
                 }
-/*
-                listener.onResult(workItems);
-                */
             }
 
             @Override

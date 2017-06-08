@@ -48,7 +48,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="250dp"
         android:backgroundTint="#FFA500"
-        android:text="PUT" />
+        android:text="edit" />
 
     <EditText
         android:id="@+id/et_put_issueId"
@@ -65,6 +65,6 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="350dp"
         android:backgroundTint="#FFA500"
-        android:text="POST" />
+        android:text="add issue" />
 
 </RelativeLayout>

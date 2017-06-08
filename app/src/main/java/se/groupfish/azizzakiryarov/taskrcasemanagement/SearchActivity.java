@@ -10,23 +10,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import adapter.WorkItemListAdapter;
 import http.HttpService;
 import model.WorkItem;
 
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     SearchView searchView;
-    ArrayList<WorkItem> workItems = new ArrayList<>();
+    RecyclerView recyclerView;
+    RecyclerView.LayoutManager layoutManager;
+    WorkItemListAdapter adapter;
+
     HttpService httpService = new HttpService();
+    ArrayList<WorkItem> getAllWorkItems = (ArrayList<WorkItem>) httpService.getAllMyTask();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +42,13 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         }
 
-        final SearchActivity.WorkItemListAdapter adapter = new SearchActivity.WorkItemListAdapter((ArrayList<WorkItem>) httpService.getAllMyTask());
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.searchRecycleview);
+        recyclerView = (RecyclerView) findViewById(R.id.searchRecycleview);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        adapter = new WorkItemListAdapter(getAllWorkItems);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -55,76 +59,13 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
-
-    private static final class WorkItemListAdapter extends RecyclerView.Adapter<SearchActivity.WorkItemListAdapter.WorkItemViewHolder> {
-        ArrayList<WorkItem> workItems;
-
-
-        private WorkItemListAdapter(ArrayList<WorkItem> workItems) {
-            this.workItems = workItems;
-        }
-
-        @Override
-        public SearchActivity.WorkItemListAdapter.WorkItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent, false);
-            return new SearchActivity.WorkItemListAdapter.WorkItemViewHolder(view, workItems);
-
-        }
-
-        @Override
-        public void onBindViewHolder(SearchActivity.WorkItemListAdapter.WorkItemViewHolder holder, int position) {
-            WorkItem workItem = workItems.get(position);
-            holder.bindView(workItem);
-        }
-
-        @Override
-        public int getItemCount() {
-            return workItems.size();
-        }
-
-        static final class WorkItemViewHolder extends RecyclerView.ViewHolder {
-            private final TextView tvTitle;
-            private final TextView tvDescription;
-            private final TextView tvState;
-            ArrayList<WorkItem> workItems = new ArrayList<>();
-
-
-            WorkItemViewHolder(View itemView, ArrayList<WorkItem> workItems) {
-                super(itemView);
-
-                this.workItems = workItems;
-
-                tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
-                tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
-                tvState = (TextView) itemView.findViewById(R.id.tvState);
-            }
-
-            void bindView(final WorkItem workItem) {
-                tvTitle.setText(workItem.getTitle());
-                tvDescription.setText(workItem.getDescription());
-                tvState.setText(workItem.getState());
-            }
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem menuItem = menu.findItem(R.id.searchBar);
+        getMenuInflater().inflate(R.menu.search_bar_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.searchByWorkItems);
         searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         searchView.setOnQueryTextListener(this);
         return true;
-
     }
 
     @Override
@@ -137,13 +78,23 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         return super.onOptionsItemSelected(item);
     }
 
-
-    public void setFilter(ArrayList<WorkItem> newList) {
-
-        workItems = new ArrayList<WorkItem>();
-        workItems.addAll(newList);
-
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
     }
 
+    @Override
+    public boolean onQueryTextChange(String newText) {
 
+        newText = newText.toLowerCase();
+        ArrayList<WorkItem> newListWithTitle = new ArrayList<>();
+        for (WorkItem workItems : getAllWorkItems) {
+            String title = workItems.getTitle().toLowerCase();
+            if (title.contains(newText)) {
+                newListWithTitle.add(workItems);
+            }
+        }
+        adapter.setFilter(newListWithTitle);
+        return true;
+    }
 }

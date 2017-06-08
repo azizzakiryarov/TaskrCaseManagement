@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
@@ -17,7 +16,7 @@ import android.widget.ProgressBar;
 import adapter.PagerAdapter;
 import dbhelper.DatabaseHelper;
 
-public class HomeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class HomeActivity extends AppCompatActivity {
 
     DatabaseHelper databaseHelper;
     ViewPager viewPager;
@@ -65,7 +64,6 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
             public void onClick(DialogInterface dialog, int id) {
                 finish();
                 LogInActivity.logInActivity.finish();
-
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -83,9 +81,6 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        //MenuItem menuItem = menu.findItem(R.id.searchBar);
-        //searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-        //searchView.setOnQueryTextListener(this);
         return true;
 
     }
@@ -96,14 +91,9 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
         if (item != null) {
             int id = item.getItemId();
             switch (id) {
-
                 case R.id.searchBar:
                     Intent intent = new Intent(this, SearchActivity.class);
                     startActivity(intent);
-                    break;
-                case R.id.add_team_and_user:
-                    Intent intent1 = new Intent(this, AddTeamAndUserActivity.class);
-                    startActivity(intent1);
                     break;
                 case R.id.team_details:
                     Intent intent2 = new Intent(this, TeamDetailsActivity.class);
@@ -115,15 +105,5 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
     }
 }

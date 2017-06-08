@@ -114,6 +114,7 @@ public class FragmentMyTask extends Fragment {
             private final TextView tvTitle;
             private final TextView tvDescription;
             private final TextView tvState;
+            private final TextView tvAssignee;
             ArrayList<WorkItem> workItems = new ArrayList<>();
             Context ctx;
 
@@ -128,12 +129,14 @@ public class FragmentMyTask extends Fragment {
                 tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
                 tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
                 tvState = (TextView) itemView.findViewById(R.id.tvState);
+                tvAssignee = (TextView) itemView.findViewById(R.id.tvAssignee);
             }
 
             void bindView(final WorkItem workItem) {
                 tvTitle.setText(workItem.getTitle());
                 tvDescription.setText(workItem.getDescription());
                 tvState.setText(workItem.getState());
+                tvAssignee.setText("User: " + String.valueOf(workItem.getUserId()));
             }
 
             @Override
@@ -145,6 +148,7 @@ public class FragmentMyTask extends Fragment {
                 intent.putExtra("title", workItem.getTitle());
                 intent.putExtra("description", workItem.getDescription());
                 intent.putExtra("state", workItem.getState());
+                intent.putExtra("assignee", String.valueOf(workItem.getUserId()));
                 this.ctx.startActivity(intent);
 
             }

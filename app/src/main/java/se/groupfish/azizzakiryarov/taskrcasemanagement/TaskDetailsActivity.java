@@ -12,14 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
+import model.WorkItem;
 
 public class TaskDetailsActivity extends AppCompatActivity {
-
-    private static final String BASE_URL = "http://10.0.2.2:8080";
-    private static final Gson gson = new GsonBuilder().create();
 
     TextView title;
     TextView description;
@@ -32,6 +27,8 @@ public class TaskDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_details);
+
+        WorkItem workItem = new WorkItem();
 
         btnEdit = (Button) findViewById(R.id.btn_edit);
 
@@ -51,7 +48,7 @@ public class TaskDetailsActivity extends AppCompatActivity {
         title.setText(getIntent().getStringExtra("title"));
         description.setText(getIntent().getStringExtra("description"));
         state.setText(getIntent().getStringExtra("state"));
-        assignee.setText(getIntent().getStringExtra("userId"));
+        assignee.setText("User: " + getIntent().getStringExtra("assignee"));
 
         ActionBar actionBar = getSupportActionBar();
 

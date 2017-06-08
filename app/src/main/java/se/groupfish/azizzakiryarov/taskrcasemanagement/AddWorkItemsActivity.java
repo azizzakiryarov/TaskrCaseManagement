@@ -1,7 +1,6 @@
 package se.groupfish.azizzakiryarov.taskrcasemanagement;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -22,11 +21,9 @@ public class AddWorkItemsActivity extends AppCompatActivity {
     private final String TAG = AddWorkItemsActivity.class.getSimpleName();
     HttpService httpService = new HttpService();
     DatabaseHelper databaseHelper;
-    Cursor result = null;
 
     Button btnPost;
     Button btnPut;
-    Button btnGetAllWorkItems;
 
     EditText etTitle;
     EditText etDescription;
@@ -44,14 +41,9 @@ public class AddWorkItemsActivity extends AppCompatActivity {
         btnPost = (Button) findViewById(R.id.btn_post);
         btnPut = (Button) findViewById(R.id.btn_put);
 
-        btnGetAllWorkItems = (Button) findViewById(R.id.btn_getAll);
         etTitle = (EditText) findViewById(R.id.et_title);
         etDescription = (EditText) findViewById(R.id.et_description);
         etState = (EditText) findViewById(R.id.et_state);
-        etUserId = (EditText) findViewById(R.id.et_userId);
-
-
-        getAllWorkItems();
 
         btnPut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,41 +67,16 @@ public class AddWorkItemsActivity extends AppCompatActivity {
                 httpService.addWorkItem(title, description, state);
                 Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to Server...", Toast.LENGTH_SHORT).show();
 
-                //OFFLINE
-                databaseHelper.addWorkItem(title, description, state, userId);
-                Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to SQLite...", Toast.LENGTH_SHORT).show();
-
             }
         });
 
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setTitle("Add workItems");
+            actionBar.setTitle("Add getAllWorkItems");
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         }
-    }
-
-    void getAllWorkItems() {
-        btnGetAllWorkItems.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Toast.makeText(AddWorkItemsActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                result = databaseHelper.getAllOverView();
-                if (result.moveToFirst()) {
-                    do {
-                        Toast.makeText(AddWorkItemsActivity.this,
-                                "id: " + result.getString(0) + "\n" +
-                                        "title: " + result.getString(1) + "\n" +
-                                        "description: " + result.getString(2) + "\n" +
-                                        "state: " + result.getString(3) + "\n" +
-                                        "userId: " + result.getString(4), Toast.LENGTH_SHORT).show();
-                    } while (result.moveToNext());
-                }
-            }
-        });
     }
 
     void showMessage(String title, String message) {
