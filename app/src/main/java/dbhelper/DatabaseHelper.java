@@ -10,15 +10,18 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import http.HttpService;
 import model.WorkItem;
 import repository.DBWorkItemsRepository;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepository {
 
-    private static final int DATABASE_VERSION = 8;
+    private HttpService httpService = new HttpService();
+    private static final int DATABASE_VERSION = 14;
     private static final String TAG = DatabaseHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "TaskrCaseManagement";
     private static final String GET_ALL_WORKITEMS = "SELECT * FROM " + DBContract.WorkItemsEntry.TABLE_NAME;
+
 
     private static DatabaseHelper instance;
 
@@ -93,8 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepos
     public Cursor getAllOverView() {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor result = db.rawQuery("SELECT * FROM " + DBContract.WorkItemsEntry.TABLE_NAME, null);
-        return result;
+        return db.rawQuery("SELECT * FROM " + DBContract.WorkItemsEntry.TABLE_NAME, null);
 
     }
 
@@ -102,24 +104,21 @@ public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepos
     public Cursor getAllTeams() {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor result = db.rawQuery("SELECT * FROM " + DBContract.TeamsEntry.TABLE_NAME, null);
-        return result;
+        return db.rawQuery("SELECT * FROM " + DBContract.TeamsEntry.TABLE_NAME, null);
     }
 
     @Override
     public Cursor getAllUsers() {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor result = db.rawQuery("SELECT * FROM " + DBContract.UsersEntry.TABLE_NAME, null);
-        return result;
+        return db.rawQuery("SELECT * FROM " + DBContract.UsersEntry.TABLE_NAME, null);
     }
 
     @Override
     public Cursor getAllWorkItemsTitle() {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor result = db.rawQuery("SELECT title FROM " + DBContract.UsersEntry.TABLE_NAME, null);
-        return result;
+        return db.rawQuery("SELECT title FROM " + DBContract.UsersEntry.TABLE_NAME, null);
     }
 
     @Override
@@ -162,6 +161,22 @@ public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepos
     }
 
     @Override
+    public void saveAllWorkItemsInSQLite() {
+
+        ArrayList<WorkItem> list = (ArrayList<WorkItem>) httpService.getAllMyTask();
+        for (WorkItem workItems : list) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("title", workItems.getTitle());
+            contentValues.put("description", workItems.getDescription());
+            contentValues.put("state", workItems.getState());
+            contentValues.put("userId", workItems.getUserId());
+            db.insert(DBContract.WorkItemsEntry.TABLE_NAME, null, contentValues);
+        }
+    }
+
+
+    @Override
     public List<WorkItem> getAllByTeamId() {
 
         List<WorkItem> allWorkItems = new ArrayList<>();
@@ -173,18 +188,21 @@ public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepos
             int titleIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_TITLE);
             int descriptionIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_DESCRIPTION);
             int stateIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_STATE);
+            int userIdIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_USER_ID);
 
             do {
                 long id = cursor.getLong(longIndex);
                 String title = cursor.getString(titleIndex);
                 String description = cursor.getString(descriptionIndex);
                 String state = cursor.getString(stateIndex);
+                long userId = cursor.getLong(userIdIndex);
 
                 WorkItem workItem = new WorkItem();
                 workItem.setId(id);
                 workItem.setTitle(title);
                 workItem.setDescription(description);
                 workItem.setState(state);
+                workItem.setUserId(userId);
 
                 allWorkItems.add(workItem);
 
@@ -208,18 +226,21 @@ public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepos
             int titleIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_TITLE);
             int descriptionIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_DESCRIPTION);
             int stateIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_STATE);
+            int userIdIndex = cursor.getColumnIndex(DBContract.WorkItemsEntry.COLUMN_NAME_USER_ID);
 
             do {
                 long id = cursor.getLong(longIndex);
                 String title = cursor.getString(titleIndex);
                 String description = cursor.getString(descriptionIndex);
                 String state = cursor.getString(stateIndex);
+                long userId = cursor.getLong(userIdIndex);
 
                 WorkItem workItem = new WorkItem();
                 workItem.setId(id);
                 workItem.setTitle(title);
                 workItem.setDescription(description);
                 workItem.setState(state);
+                workItem.setUserId(userId);
 
                 allWorkItems.add(workItem);
 
@@ -246,7 +267,5 @@ public class DatabaseHelper extends SQLiteOpenHelper implements DBWorkItemsRepos
     public List<WorkItem> getAllDone() {
         return null;
     }
-
-    //How to Include Database in app https://www.youtube.com/watch?v=iE_bsPfB00w
 
 }

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import dbhelper.DatabaseHelper;
 import http.HttpService;
 import model.WorkItem;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.AddWorkItemsActivity;
@@ -27,6 +28,7 @@ import se.groupfish.azizzakiryarov.taskrcasemanagement.TaskDetailsActivity;
 public class FragmentUnstarted extends Fragment {
 
     HttpService httpService = new HttpService();
+    DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
     FloatingActionButton floatingActionButton;
     ArrayList<WorkItem> workItems;
 
@@ -60,6 +62,8 @@ public class FragmentUnstarted extends Fragment {
             }
         });
 
+
+
         /*
         httpService.getAllUnstarted(new OnResultListener() {
             public void onResilt(List<WorkItem> workItemList) {
@@ -73,6 +77,7 @@ public class FragmentUnstarted extends Fragment {
 
         workItems = (ArrayList<WorkItem>) httpService.getAllUnstarted();
 
+
         final WorkItemListAdapter adapter = new WorkItemListAdapter(workItems, getContext());
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_view_UNSTARTED);
         recyclerView.setAdapter(adapter);
@@ -82,6 +87,7 @@ public class FragmentUnstarted extends Fragment {
             @Override
             public void run() {
                 adapter.notifyDataSetChanged();
+
             }
         }, 50);
 
@@ -158,13 +164,6 @@ public class FragmentUnstarted extends Fragment {
 
             }
         }
-    }
-
-    public void setFilter(ArrayList<WorkItem> newList) {
-
-        workItems = new ArrayList<WorkItem>();
-        workItems.addAll(newList);
-        notifyAll();
     }
 }
 

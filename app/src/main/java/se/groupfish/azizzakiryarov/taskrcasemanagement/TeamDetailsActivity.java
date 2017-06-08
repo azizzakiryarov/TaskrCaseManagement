@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,23 +17,35 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import dbhelper.DatabaseHelper;
+import http.ApiRepository;
 import http.HttpService;
 import model.Team;
 import model.User;
 import model.WorkItem;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class TeamDetailsActivity extends AppCompatActivity {
 
+    private static final String BASE_URL = "http://10.0.2.2:8080";
+    private static final Gson gson = new GsonBuilder().create();
+
+    DatabaseHelper databaseHelper;
     HttpService httpService;
     Button btnOverview;
     Button btnEdit;
     TextView tvTeamName;
     TextView tvDescription;
-    ArrayList<User> users;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +56,11 @@ public class TeamDetailsActivity extends AppCompatActivity {
         tvDescription = (TextView) findViewById(R.id.team_description);
 
         httpService = new HttpService();
+        databaseHelper = new DatabaseHelper(TeamDetailsActivity.this);
 
-        Team team = httpService.getTeamById(1l);
+        setTeamName();
 
-        tvTeamName.setText(team.getTeamName());
-        tvDescription.setText("GroupFish was created by Emil Lindblom");
+        tvDescription.setText("GroupFish is a best");
 
         btnOverview = (Button) findViewById(R.id.btn_overview);
         btnEdit = (Button) findViewById(R.id.btn_edit_team);
@@ -56,6 +69,9 @@ public class TeamDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showMessage("SERVER", getAllOverview(1l).toString());
+                showMessage("SQLite", databaseHelper.getAllMyTask().toString());
+                databaseHelper.saveAllWorkItemsInSQLite();
+
             }
         });
 
@@ -88,6 +104,32 @@ public class TeamDetailsActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    void setTeamName() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(BASE_URL)
+                .build();
+
+        ApiRepository service = retrofit.create(ApiRepository.class);
+
+        Call<Team> call = service.getTeamById(1l);
+
+        call.enqueue(new Callback<Team>() {
+            @Override
+            public void onResponse(Response<Team> response, Retrofit retrofit) {
+
+                Team team = response.body();
+                tvTeamName.setText(team.getTeamName());
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
+            }
+        });
     }
 
     public StringBuffer getAllOverview(Long id) {

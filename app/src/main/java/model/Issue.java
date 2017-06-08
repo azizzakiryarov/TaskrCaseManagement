@@ -12,6 +12,8 @@ public class Issue {
     @Expose
     private String comment;
 
+    public Issue(){}
+
     public Issue(String comment) {
         this.comment = comment;
     }

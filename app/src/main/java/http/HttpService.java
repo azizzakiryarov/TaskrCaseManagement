@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Issue;
-import model.Team;
 import model.User;
 import model.WorkItem;
 import retrofit.Call;
@@ -23,12 +22,15 @@ public final class HttpService {
 
     private static final String BASE_URL = "http://10.0.2.2:8080";
     private static final Gson gson = new GsonBuilder().create();
-    private List<WorkItem> getWorkItemsList = new ArrayList<>();
-    private Team getTeamById;
+    private List<WorkItem> getAllWorkItemsUnstarted = new ArrayList<>();
+    private List<WorkItem> getAllWorkItemsStarted = new ArrayList<>();
+    private List<WorkItem> getAllWorkItemsDone = new ArrayList<>();
+    private List<WorkItem> getAllWorkItems = new ArrayList<>();
+    private List<WorkItem> getAllWorkItemsByTeamId = new ArrayList<>();
+    private List<User> getAllUsersByTeamId = new ArrayList<>();
+
 
     public List<WorkItem> getAllUnstarted() {
-
-        final List<WorkItem> getWorkItemsListUnstarted = new ArrayList<>();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -52,7 +54,7 @@ public final class HttpService {
                     workItem.setDescription(workItems.get(i).getDescription());
                     workItem.setState(workItems.get(i).getState());
                     workItem.setUserId(workItems.get(i).getUserId());
-                    getWorkItemsListUnstarted.add(workItem);
+                    getAllWorkItemsUnstarted.add(workItem);
 
                 }
 /*
@@ -65,7 +67,7 @@ public final class HttpService {
                 Log.e("FAILURE", t.getMessage(), t);
             }
         });
-        return getWorkItemsListUnstarted;
+        return getAllWorkItemsUnstarted;
     }
 
     public List<WorkItem> getAllStarted() {
@@ -93,7 +95,7 @@ public final class HttpService {
                     workItem.setDescription(workItems.get(i).getDescription());
                     workItem.setState(workItems.get(i).getState());
                     workItem.setUserId(workItems.get(i).getUserId());
-                    getWorkItemsList.add(workItem);
+                    getAllWorkItemsStarted.add(workItem);
 
                 }
             }
@@ -103,7 +105,7 @@ public final class HttpService {
                 Log.e("FAILURE", t.getMessage(), t);
             }
         });
-        return getWorkItemsList;
+        return getAllWorkItemsStarted;
     }
 
     public List<WorkItem> getAllDone() {
@@ -131,7 +133,7 @@ public final class HttpService {
                     workItem.setDescription(workItems.get(i).getDescription());
                     workItem.setState(workItems.get(i).getState());
                     workItem.setUserId(workItems.get(i).getUserId());
-                    getWorkItemsList.add(workItem);
+                    getAllWorkItemsDone.add(workItem);
 
                 }
             }
@@ -141,7 +143,7 @@ public final class HttpService {
                 Log.e("FAILURE", t.getMessage(), t);
             }
         });
-        return getWorkItemsList;
+        return getAllWorkItemsDone;
     }
 
     public List<WorkItem> getAllMyTask() {
@@ -169,7 +171,7 @@ public final class HttpService {
                     workItem.setDescription(workItems.get(i).getDescription());
                     workItem.setState(workItems.get(i).getState());
                     workItem.setUserId(workItems.get(i).getUserId());
-                    getWorkItemsList.add(workItem);
+                    getAllWorkItems.add(workItem);
 
                 }
             }
@@ -179,7 +181,7 @@ public final class HttpService {
                 Log.e("FAILURE", t.getMessage(), t);
             }
         });
-        return getWorkItemsList;
+        return getAllWorkItems;
     }
 
     public List<WorkItem> getAllWorkItemsByTeamId(Long id) {
@@ -208,7 +210,7 @@ public final class HttpService {
                     workItem.setState(workItems.get(i).getState());
                     workItem.setUserId(workItems.get(i).getUserId());
                     workItem.setIssueId(workItems.get(i).getIssueId());
-                    getWorkItemsList.add(workItem);
+                    getAllWorkItemsByTeamId.add(workItem);
 
                 }
             }
@@ -218,12 +220,11 @@ public final class HttpService {
                 Log.e("FAILURE", t.getMessage(), t);
             }
         });
-        return getWorkItemsList;
+        return getAllWorkItemsByTeamId;
     }
 
     public List<User> getAllUsersByTeamId(Long id) {
 
-        final ArrayList<User> getAllUsersByTeamId = new ArrayList<>();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -424,6 +425,8 @@ public final class HttpService {
 
     public void addWorkItemToIssue(final Long id, final String issue) {
 
+        Issue newIssue = new Issue();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BASE_URL)
@@ -431,7 +434,7 @@ public final class HttpService {
 
         ApiRepository service = retrofit.create(ApiRepository.class);
 
-        Call<WorkItem> call = service.addWorkItemToIssue(id, new Issue(issue));
+        Call<WorkItem> call = service.addWorkItemToIssue(id, newIssue.setComment(issue));
 
         call.enqueue(new Callback<WorkItem>() {
             @Override
@@ -444,35 +447,6 @@ public final class HttpService {
                 Log.e("FAILURE", t.getMessage(), t);
             }
         });
-    }
-
-    public Team getTeamById(Long id) {
-
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl(BASE_URL)
-                .build();
-
-        ApiRepository service = retrofit.create(ApiRepository.class);
-
-        Call<Team> call = service.getTeamById(id);
-
-        call.enqueue(new Callback<Team>() {
-            @Override
-            public void onResponse(Response<Team> response, Retrofit retrofit) {
-
-                getTeamById = new Team();
-                Team team = response.body();
-                getTeamById.setTeamName(team.getTeamName());
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e("FAILURE", t.getMessage(), t);
-            }
-        });
-        return getTeamById;
     }
     //POST Method // https://www.youtube.com/watch?v=wg9nG07UvuU
 }

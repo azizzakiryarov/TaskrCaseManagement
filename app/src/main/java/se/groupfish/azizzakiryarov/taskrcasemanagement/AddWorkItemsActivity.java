@@ -96,7 +96,6 @@ public class AddWorkItemsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
                 Toast.makeText(AddWorkItemsActivity.this, "Success", Toast.LENGTH_SHORT).show();
                 result = databaseHelper.getAllOverView();
                 if (result.moveToFirst()) {

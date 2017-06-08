@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -15,18 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 
-import java.util.ArrayList;
-
 import adapter.PagerAdapter;
 import dbhelper.DatabaseHelper;
-import fragment.FragmentUnstarted;
-import model.WorkItem;
 
 public class HomeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     DatabaseHelper databaseHelper;
     ViewPager viewPager;
-    SearchView searchView;
+
 
     ProgressBar pUnstarted;
     ProgressBar pStarted;
@@ -88,9 +83,9 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem menuItem = menu.findItem(R.id.searchBar);
-        searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-        searchView.setOnQueryTextListener(this);
+        //MenuItem menuItem = menu.findItem(R.id.searchBar);
+        //searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        //searchView.setOnQueryTextListener(this);
         return true;
 
     }
@@ -101,6 +96,11 @@ public class HomeActivity extends AppCompatActivity implements SearchView.OnQuer
         if (item != null) {
             int id = item.getItemId();
             switch (id) {
+
+                case R.id.searchBar:
+                    Intent intent = new Intent(this, SearchActivity.class);
+                    startActivity(intent);
+                    break;
                 case R.id.add_team_and_user:
                     Intent intent1 = new Intent(this, AddTeamAndUserActivity.class);
                     startActivity(intent1);

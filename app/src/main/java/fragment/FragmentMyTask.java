@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import dbhelper.DatabaseHelper;
 import http.HttpService;
 import model.WorkItem;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.AddWorkItemsActivity;
@@ -25,6 +26,7 @@ import se.groupfish.azizzakiryarov.taskrcasemanagement.TaskDetailsActivity;
 
 public class FragmentMyTask extends Fragment {
 
+    DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
     HttpService httpService = new HttpService();
     FloatingActionButton floatingActionButton;
 
@@ -69,6 +71,8 @@ public class FragmentMyTask extends Fragment {
             @Override
             public void run() {
                 adapter.notifyDataSetChanged();
+
+
             }
         }, 50);
 

@@ -14,6 +14,8 @@ public interface DBWorkItemsRepository {
 
     void addWorkItem(String title, String descrpition, String state, Long userId);
 
+    void saveAllWorkItemsInSQLite();
+
     List<WorkItem> getAllByTeamId();
 
     List<WorkItem> getAllMyTask();

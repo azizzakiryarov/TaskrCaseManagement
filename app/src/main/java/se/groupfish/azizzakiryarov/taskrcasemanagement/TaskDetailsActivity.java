@@ -4,16 +4,22 @@ package se.groupfish.azizzakiryarov.taskrcasemanagement;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 
 public class TaskDetailsActivity extends AppCompatActivity {
+
+    private static final String BASE_URL = "http://10.0.2.2:8080";
+    private static final Gson gson = new GsonBuilder().create();
 
     TextView title;
     TextView description;

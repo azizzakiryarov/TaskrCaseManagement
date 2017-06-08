@@ -2,10 +2,9 @@ package se.groupfish.azizzakiryarov.taskrcasemanagement;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -96,7 +95,7 @@ public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
                 final String issue = etIssue.getText().toString();
 
                 //ONLINE
-                if (etIssue != null) {
+                if (!issue.isEmpty()) {
                     httpService.addWorkItemToIssue(id, issue);
                     Toast.makeText(EditAssigneeWorkItemsActivity.this, "Issue is assigneed... ", Toast.LENGTH_SHORT).show();
                 } else {
