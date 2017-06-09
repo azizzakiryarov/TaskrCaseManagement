@@ -13,9 +13,9 @@ import android.widget.Toast;
 
 import http.HttpService;
 
-public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
+import static http.NetworkState.isOnline;
 
-    private static final String TAG = "MyTags";
+public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
 
     HttpService httpService = new HttpService();
 
@@ -55,32 +55,36 @@ public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
 
 
                 //ONLINE
-                if (!state.isEmpty()) {
-                    httpService.updateWorkItemsState(id, state);
-                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "State is updated... ", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "State not is updated... ", Toast.LENGTH_SHORT).show();
-                }
+                if (isOnline(EditAssigneeWorkItemsActivity.this)) {
+                    if (!state.isEmpty()) {
+                        httpService.updateWorkItemsState(id, state);
+                        Toast.makeText(EditAssigneeWorkItemsActivity.this, "State is updated... ", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(EditAssigneeWorkItemsActivity.this, "State is not updated... ", Toast.LENGTH_SHORT).show();
+                    }
 
-                if (!etUser.getText().toString().isEmpty()) {
-                    httpService.assigneeWorkItemToUser(id, userId);
-                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "User is assigneed... ", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "User is assigneed... ", Toast.LENGTH_SHORT).show();
-                }
+                    if (!etUser.getText().toString().isEmpty()) {
+                        httpService.assigneeWorkItemToUser(id, userId);
+                        Toast.makeText(EditAssigneeWorkItemsActivity.this, "User is assigneed... ", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(EditAssigneeWorkItemsActivity.this, "User is not assigneed... ", Toast.LENGTH_SHORT).show();
+                    }
 
-                if (!title.isEmpty()) {
-                    httpService.updateWorkItemsTitle(id, title);
-                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "Title is updated... ", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "Title is not updated... ", Toast.LENGTH_SHORT).show();
-                }
+                    if (!title.isEmpty()) {
+                        httpService.updateWorkItemsTitle(id, title);
+                        Toast.makeText(EditAssigneeWorkItemsActivity.this, "Title is updated... ", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(EditAssigneeWorkItemsActivity.this, "Title is not updated... ", Toast.LENGTH_SHORT).show();
+                    }
 
-                if (!description.isEmpty()) {
-                    httpService.updateWorkItemsDescription(id, description);
-                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "Description is updated... ", Toast.LENGTH_SHORT).show();
+                    if (!description.isEmpty()) {
+                        httpService.updateWorkItemsDescription(id, description);
+                        Toast.makeText(EditAssigneeWorkItemsActivity.this, "Description is updated... ", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(EditAssigneeWorkItemsActivity.this, "Description is not updated... ", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "Description is not updated... ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "You don't have a network...", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -95,11 +99,15 @@ public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
                 final String issue = etIssue.getText().toString();
 
                 //ONLINE
-                if (!issue.isEmpty()) {
-                    httpService.addWorkItemToIssue(id, issue);
-                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "Issue is assigneed... ", Toast.LENGTH_SHORT).show();
+                if (isOnline(EditAssigneeWorkItemsActivity.this)) {
+                    if (!issue.isEmpty()) {
+                        httpService.addWorkItemToIssue(id, issue);
+                        Toast.makeText(EditAssigneeWorkItemsActivity.this, "Issue is assigneed... ", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(EditAssigneeWorkItemsActivity.this, "Issue is not assigneed... ", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "Issue is not assigneed... ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditAssigneeWorkItemsActivity.this, "You don't have a network...", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -107,10 +115,8 @@ public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
 
-        if (actionBar != null)
-
-        {
-            actionBar.setTitle("Edit | Assignee getAllWorkItems");
+        if (actionBar != null) {
+            actionBar.setTitle("Edit | Assignee getAllWorkItemsOnline");
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         }

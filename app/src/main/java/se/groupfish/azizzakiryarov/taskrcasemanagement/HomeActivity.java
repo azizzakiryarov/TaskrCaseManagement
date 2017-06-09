@@ -20,8 +20,6 @@ public class HomeActivity extends AppCompatActivity {
 
     DatabaseHelper databaseHelper;
     ViewPager viewPager;
-
-
     ProgressBar pUnstarted;
     ProgressBar pStarted;
     ProgressBar pDone;
@@ -33,9 +31,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         databaseHelper = new DatabaseHelper(this);
-
         viewPager = (ViewPager) findViewById(R.id.pager);
-
         pUnstarted = (ProgressBar) findViewById(R.id.UNSTARTED);
         pStarted = (ProgressBar) findViewById(R.id.STARTED);
         pDone = (ProgressBar) findViewById(R.id.DONE);

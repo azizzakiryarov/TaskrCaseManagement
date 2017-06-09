@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,19 +15,17 @@ import android.widget.Toast;
 import dbhelper.DatabaseHelper;
 import http.HttpService;
 
+import static http.NetworkState.isOnline;
+
 public class AddWorkItemsActivity extends AppCompatActivity {
 
-    private final String TAG = AddWorkItemsActivity.class.getSimpleName();
     HttpService httpService = new HttpService();
     DatabaseHelper databaseHelper;
-
     Button btnPost;
     Button btnPut;
-
     EditText etTitle;
     EditText etDescription;
     EditText etState;
-    EditText etUserId;
 
 
     @Override
@@ -40,7 +37,6 @@ public class AddWorkItemsActivity extends AppCompatActivity {
 
         btnPost = (Button) findViewById(R.id.btn_post);
         btnPut = (Button) findViewById(R.id.btn_put);
-
         etTitle = (EditText) findViewById(R.id.et_title);
         etDescription = (EditText) findViewById(R.id.et_description);
         etState = (EditText) findViewById(R.id.et_state);
@@ -48,8 +44,12 @@ public class AddWorkItemsActivity extends AppCompatActivity {
         btnPut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddWorkItemsActivity.this, EditAssigneeWorkItemsActivity.class);
-                startActivity(intent);
+                if (isOnline(AddWorkItemsActivity.this)) {
+                    Intent intent = new Intent(AddWorkItemsActivity.this, EditAssigneeWorkItemsActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(AddWorkItemsActivity.this, "You don't have Network...", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -60,32 +60,24 @@ public class AddWorkItemsActivity extends AppCompatActivity {
                 String title = etTitle.getText().toString();
                 String description = etDescription.getText().toString();
                 String state = etState.getText().toString();
-                Long userId = Long.valueOf(etUserId.getText().toString());
-
 
                 //ONLINE
-                httpService.addWorkItem(title, description, state);
-                Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to Server...", Toast.LENGTH_SHORT).show();
-
+                if (isOnline(AddWorkItemsActivity.this)) {
+                    httpService.addWorkItem(title, description, state);
+                    Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to Server...", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AddWorkItemsActivity.this, "You don't have Network...", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setTitle("Add getAllWorkItems");
+            actionBar.setTitle("Add WorkItem");
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         }
-    }
-
-    void showMessage(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.show();
-
     }
 
     @Override

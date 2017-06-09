@@ -24,11 +24,14 @@ import se.groupfish.azizzakiryarov.taskrcasemanagement.AddWorkItemsActivity;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.R;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.TaskDetailsActivity;
 
+import static http.NetworkState.isOnline;
+
 public class FragmentMyTask extends Fragment {
 
-    DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
     HttpService httpService = new HttpService();
     FloatingActionButton floatingActionButton;
+    ArrayList<WorkItem> workItemsOnline;
+    ArrayList<WorkItem> workItemsOffline;
 
 
     public static Fragment newInstance() {
@@ -60,21 +63,39 @@ public class FragmentMyTask extends Fragment {
             }
         });
 
-        ArrayList<WorkItem> workItems = (ArrayList<WorkItem>) httpService.getAllMyTask();
+        if (isOnline(getContext())) {
+            workItemsOnline = (ArrayList<WorkItem>) httpService.getAllWorkItemsByUserId(2L);
+            final WorkItemListAdapter adapter = new WorkItemListAdapter(workItemsOnline, getContext());
+            final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_view_MYTASK);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        final FragmentMyTask.WorkItemListAdapter adapter = new FragmentMyTask.WorkItemListAdapter(workItems, getContext());
-        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_view_MYTASK);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                adapter.notifyDataSetChanged();
+                }
+            }, 50);
 
 
-            }
-        }, 50);
+        } else {
+
+            workItemsOffline = (ArrayList<WorkItem>) DatabaseHelper.getInstance(getContext()).getAllMyTask();
+            final WorkItemListAdapter adapter = new WorkItemListAdapter(workItemsOffline, getContext());
+            final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_view_MYTASK);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+
+                }
+            }, 50);
+
+        }
 
         return view;
     }
@@ -94,8 +115,7 @@ public class FragmentMyTask extends Fragment {
         public FragmentMyTask.WorkItemListAdapter.WorkItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent, false);
-            FragmentMyTask.WorkItemListAdapter.WorkItemViewHolder workItemViewHolder = new FragmentMyTask.WorkItemListAdapter.WorkItemViewHolder(view, ctx, workItems);
-            return workItemViewHolder;
+            return new WorkItemViewHolder(view, ctx, workItems);
 
         }
 
@@ -136,6 +156,14 @@ public class FragmentMyTask extends Fragment {
                 tvTitle.setText(workItem.getTitle());
                 tvDescription.setText(workItem.getDescription());
                 tvState.setText(workItem.getState());
+                tvState.setTextColor(Color.parseColor("#FFFFFF"));
+                if (tvState.getText().toString().contains("Unstarted")) {
+                    tvState.setBackgroundColor(Color.parseColor("#979797"));
+                } else if (tvState.getText().toString().contains("Started")) {
+                    tvState.setBackgroundColor(Color.parseColor("#c67100"));
+                } else if (tvState.getText().toString().contains("Done")) {
+                    tvState.setBackgroundColor(Color.parseColor("#7ED321"));
+                }
                 tvAssignee.setText("User: " + String.valueOf(workItem.getUserId()));
             }
 

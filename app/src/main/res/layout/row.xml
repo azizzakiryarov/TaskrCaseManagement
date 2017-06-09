@@ -26,7 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="295dp"
         android:layout_marginTop="-40dp"
-        android:shadowColor="@android:color/darker_gray"
         android:text="@string/state" />
 
     <TextView

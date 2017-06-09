@@ -11,8 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import model.WorkItem;
+import static http.NetworkState.isOnline;
 
 public class TaskDetailsActivity extends AppCompatActivity {
 
@@ -22,21 +23,22 @@ public class TaskDetailsActivity extends AppCompatActivity {
     TextView assignee;
     Button btnEdit;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_details);
-
-        WorkItem workItem = new WorkItem();
 
         btnEdit = (Button) findViewById(R.id.btn_edit);
 
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TaskDetailsActivity.this, EditAssigneeWorkItemsActivity.class);
-                startActivity(intent);
+                if (isOnline(TaskDetailsActivity.this)) {
+                    Intent intent = new Intent(TaskDetailsActivity.this, EditAssigneeWorkItemsActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(TaskDetailsActivity.this, "You don't have Network...", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

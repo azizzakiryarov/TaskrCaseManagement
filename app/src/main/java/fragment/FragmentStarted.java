@@ -17,31 +17,21 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import dbhelper.DatabaseHelper;
 import http.HttpService;
 import model.WorkItem;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.AddWorkItemsActivity;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.R;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.TaskDetailsActivity;
 
+import static http.NetworkState.isOnline;
+
 public class FragmentStarted extends Fragment {
 
     HttpService httpService = new HttpService();
     FloatingActionButton floatingActionButton;
-
-
-    public static Fragment newInstance() {
-        return new FragmentUnstarted();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    ArrayList<WorkItem> workItemsOnline;
+    ArrayList<WorkItem> workItemsOffline;
 
     @Nullable
     @Override
@@ -58,19 +48,39 @@ public class FragmentStarted extends Fragment {
             }
         });
 
-        ArrayList<WorkItem> workItems = (ArrayList<WorkItem>) httpService.getAllStarted();
+        if (isOnline(getContext())) {
+            workItemsOnline = (ArrayList<WorkItem>) httpService.getAllStarted();
+            final WorkItemListAdapter adapter = new WorkItemListAdapter(workItemsOnline, getContext());
+            final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_view_STARTED);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        final FragmentStarted.WorkItemListAdapter adapter = new FragmentStarted.WorkItemListAdapter(workItems, getContext());
-        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_view_STARTED);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                adapter.notifyDataSetChanged();
-            }
-        }, 50);
+                }
+            }, 50);
+
+
+        } else {
+
+            workItemsOffline = (ArrayList<WorkItem>) DatabaseHelper.getInstance(getContext()).getAllStarted();
+            final WorkItemListAdapter adapter = new WorkItemListAdapter(workItemsOffline, getContext());
+            final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_view_STARTED);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+
+                }
+            }, 50);
+
+        }
 
         return view;
     }
@@ -131,6 +141,8 @@ public class FragmentStarted extends Fragment {
                 tvTitle.setText(workItem.getTitle());
                 tvDescription.setText(workItem.getDescription());
                 tvState.setText(workItem.getState());
+                tvState.setTextColor(Color.parseColor("#FFFFFF"));
+                tvState.setBackgroundColor(Color.parseColor("#c67100"));
                 tvAssignee.setText("User: " + String.valueOf(workItem.getUserId()));
             }
 

@@ -1,5 +1,8 @@
 package se.groupfish.azizzakiryarov.taskrcasemanagement;
 
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,6 +27,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import dbhelper.DBContract;
 import dbhelper.DatabaseHelper;
 import http.ApiRepository;
 import http.HttpService;
@@ -35,14 +40,18 @@ import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
+import static http.NetworkState.isOnline;
+
 public class TeamDetailsActivity extends AppCompatActivity {
 
     private static final String BASE_URL = "http://10.0.2.2:8080";
     private static final Gson gson = new GsonBuilder().create();
 
+    SQLiteDatabase db = null;
     DatabaseHelper databaseHelper;
     HttpService httpService;
     Button btnOverview;
+    Button btnSaveAllInMemory;
     Button btnEdit;
     TextView tvTeamName;
     TextView tvDescription;
@@ -58,20 +67,51 @@ public class TeamDetailsActivity extends AppCompatActivity {
         httpService = new HttpService();
         databaseHelper = new DatabaseHelper(TeamDetailsActivity.this);
 
-        setTeamName();
+        setTeamNameOnline();
 
         tvDescription.setText("GroupFish is a best");
 
         btnOverview = (Button) findViewById(R.id.btn_overview);
         btnEdit = (Button) findViewById(R.id.btn_edit_team);
+        btnSaveAllInMemory = (Button) findViewById(R.id.btn_save_all_in_SQLite);
+
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isOnline(TeamDetailsActivity.this)) {
+                    Intent intent = new Intent(TeamDetailsActivity.this, EditTeamActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(TeamDetailsActivity.this, "You don't have Network...", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
 
         btnOverview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMessage("SERVER", getAllOverview(1l).toString());
-                showMessage("SQLite", databaseHelper.getAllMyTask().toString());
-                databaseHelper.saveAllWorkItemsInSQLite();
+                if (isOnline(TeamDetailsActivity.this)) {
+                    showMessage("SERVER", getAllOverview(1L).toString());
+                    showMessage("SQLite", databaseHelper.getAllWorkItemsFromSQLite().toString());
+                    showMessage("SQLite", databaseHelper.getTeamName());
+                } else {
+                    showMessage("SQLite", databaseHelper.getAllWorkItemsFromSQLite().toString());
+                }
+            }
+        });
 
+        btnSaveAllInMemory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isOnline(TeamDetailsActivity.this)) {
+                    databaseHelper.saveAllWorkItemsInSQLite();
+                    Toast.makeText(TeamDetailsActivity.this, "Your WorkItems is saved successfully...", Toast.LENGTH_LONG).show();
+                    databaseHelper.saveAllUsersByTeamIdInSQLite();
+                    Toast.makeText(TeamDetailsActivity.this, "Your Users is saved successfully...", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(TeamDetailsActivity.this, "You don't have Network...", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -83,17 +123,32 @@ public class TeamDetailsActivity extends AppCompatActivity {
             actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFA500")));
         }
 
-        final UsersListAdapter adapter = new UsersListAdapter((ArrayList<User>) httpService.getAllUsersByTeamId(1l));
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.Members);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if (isOnline(TeamDetailsActivity.this)) {
+            final UsersListAdapter adapter = new UsersListAdapter((ArrayList<User>) httpService.getAllUsersByTeamId(1L));
+            final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.Members);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                adapter.notifyDataSetChanged();
-            }
-        }, 50);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                }
+            }, 50);
+        } else {
+
+            final UsersListAdapter adapter = new UsersListAdapter((ArrayList<User>) DatabaseHelper.getInstance(this).getAllUsersByTeamId());
+            final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.Members);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                }
+            }, 50);
+        }
     }
 
     @Override
@@ -106,7 +161,7 @@ public class TeamDetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void setTeamName() {
+    void setTeamNameOnline() {
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BASE_URL)
@@ -114,15 +169,26 @@ public class TeamDetailsActivity extends AppCompatActivity {
 
         ApiRepository service = retrofit.create(ApiRepository.class);
 
-        Call<Team> call = service.getTeamById(1l);
+        Call<Team> call = service.getTeamById(1L);
 
         call.enqueue(new Callback<Team>() {
             @Override
             public void onResponse(Response<Team> response, Retrofit retrofit) {
 
-                Team team = response.body();
-                tvTeamName.setText(team.getTeamName());
+                if (isOnline(TeamDetailsActivity.this)) {
+                    Team team = response.body();
+                    tvTeamName.setText(team.getTeamName());
 
+                    db = DatabaseHelper.getInstance(TeamDetailsActivity.this).getWritableDatabase();
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put("teamName", team.getTeamName());
+                    db.insert(DBContract.TeamsEntry.TABLE_NAME, null, contentValues);
+                    Toast.makeText(TeamDetailsActivity.this, "Saved teamName in SQLite", Toast.LENGTH_SHORT).show();
+
+
+                } else {
+                    tvTeamName.setText(DatabaseHelper.getInstance(TeamDetailsActivity.this).getTeamName());
+                }
             }
 
             @Override
@@ -137,11 +203,11 @@ public class TeamDetailsActivity extends AppCompatActivity {
         List<WorkItem> getAllWorkItemsByTeamId = httpService.getAllWorkItemsByTeamId(id);
         StringBuffer stringBuffer = new StringBuffer();
         for (WorkItem workItems : getAllWorkItemsByTeamId) {
-            stringBuffer.append("Title : " + workItems.getTitle() + "\n");
-            stringBuffer.append("Description : " + workItems.getDescription() + "\n");
-            stringBuffer.append("State : " + workItems.getState() + "\n");
-            stringBuffer.append("UserId : " + workItems.getUserId() + "\n");
-            stringBuffer.append("IssueId : " + workItems.getIssueId() + "\n\n");
+            stringBuffer.append("Title : ").append(workItems.getTitle()).append("\n");
+            stringBuffer.append("Description : ").append(workItems.getDescription()).append("\n");
+            stringBuffer.append("State : ").append(workItems.getState()).append("\n");
+            stringBuffer.append("UserId : ").append(workItems.getUserId()).append("\n");
+            stringBuffer.append("IssueId : ").append(workItems.getIssueId()).append("\n\n");
         }
         return stringBuffer;
     }

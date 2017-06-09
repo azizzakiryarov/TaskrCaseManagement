@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Issue;
+import model.Team;
 import model.User;
 import model.WorkItem;
 import retrofit.Call;
@@ -27,6 +28,7 @@ public final class HttpService {
     private List<WorkItem> getAllWorkItemsDone = new ArrayList<>();
     private List<WorkItem> getAllWorkItems = new ArrayList<>();
     private List<WorkItem> getAllWorkItemsByTeamId = new ArrayList<>();
+    private List<WorkItem> getAllWorkItemsByUserId = new ArrayList<>();
     private List<User> getAllUsersByTeamId = new ArrayList<>();
 
 
@@ -143,7 +145,7 @@ public final class HttpService {
         return getAllWorkItemsDone;
     }
 
-    public List<WorkItem> getAllMyTask() {
+    public List<WorkItem> getAllWorkItems() {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -218,6 +220,45 @@ public final class HttpService {
             }
         });
         return getAllWorkItemsByTeamId;
+    }
+
+    public List<WorkItem> getAllWorkItemsByUserId(Long id) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(BASE_URL)
+                .build();
+
+        ApiRepository service = retrofit.create(ApiRepository.class);
+
+        Call<List<WorkItem>> call = service.getAllWorkItemsByUserId(id);
+
+        call.enqueue(new Callback<List<WorkItem>>() {
+            @Override
+            public void onResponse(Response<List<WorkItem>> response, Retrofit retrofit) {
+
+                List<WorkItem> workItems = response.body();
+
+                for (int i = 0; i < workItems.size(); i++) {
+
+                    WorkItem workItem = new WorkItem();
+                    workItem.setId(workItems.get(i).getId());
+                    workItem.setTitle(workItems.get(i).getTitle());
+                    workItem.setDescription(workItems.get(i).getDescription());
+                    workItem.setState(workItems.get(i).getState());
+                    workItem.setUserId(workItems.get(i).getUserId());
+                    workItem.setIssueId(workItems.get(i).getIssueId());
+                    getAllWorkItemsByUserId.add(workItem);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
+            }
+        });
+        return getAllWorkItemsByUserId;
     }
 
     public List<User> getAllUsersByTeamId(Long id) {
@@ -445,6 +486,36 @@ public final class HttpService {
             }
         });
     }
+
+    public void updateTeamName(final Long id, final String teamName) {
+
+        Team updatedTeam = new Team();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .baseUrl(BASE_URL)
+                .build();
+
+        ApiRepository service = retrofit.create(ApiRepository.class);
+
+        Call<WorkItem> call = service.updateTeamsName(id, updatedTeam.setTeamName(teamName));
+
+        call.enqueue(new Callback<WorkItem>() {
+            @Override
+            public void onResponse(Response<WorkItem> response, Retrofit retrofit) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e("FAILURE", t.getMessage(), t);
+            }
+        });
+    }
+
+
+
+
     //POST Method // https://www.youtube.com/watch?v=wg9nG07UvuU
 }
 

@@ -23,8 +23,8 @@ public class DBContract implements BaseColumns {
         public static final String TABLE_NAME = "User";
         public static final String COLUMN_NAME_FIRSTNAME = "firstName";
         public static final String COLUMN_NAME_LASTNAME = "lastName";
-        public static final String COLUMN_NAME_USER_NUMBER = "userNumber";
         public static final String COLUMN_NAME_USER_NAME = "userName";
+        public static final String COLUMN_NAME_USER_NUMBER = "userNumber";
         public static final String COLUMN_NAME_USER_STATE = "state";
         public static final String COLUMN_NAME_TEAMID = "teamId";
 

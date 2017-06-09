@@ -8,7 +8,6 @@ import model.User;
 import model.WorkItem;
 import retrofit.Call;
 import retrofit.http.Body;
-import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
@@ -32,7 +31,6 @@ public interface ApiRepository {
     @GET("/workitems/getById/{id}")
     Call<WorkItem> getWorkItemById(@Path("id") Long id);
 
-
     @POST("/workitems")
     Call<WorkItem> addWorkItem(@Body WorkItem workItem);
 
@@ -54,10 +52,16 @@ public interface ApiRepository {
     @GET("/workitems")
     Call<List<WorkItem>> getAllWorkItemsByTeamId(@Query("teamId") Long id);
 
+    @GET("/workitems")
+    Call<List<WorkItem>> getAllWorkItemsByUserId(@Query("userId") Long id);
+
     @GET("/users/{id}")
     Call<List<User>> getAllUsersByTeamId(@Path("id") Long id);
 
     @GET("/teams/{id}")
     Call<Team> getTeamById(@Path("id") Long id);
+
+    @PUT("/teams/{id}")
+    Call<WorkItem> updateTeamsName(@Path("id") Long id, @Body Team team);
 
 }

@@ -4,27 +4,30 @@ import android.database.Cursor;
 
 import java.util.List;
 
+import model.User;
 import model.WorkItem;
 
 public interface DBWorkItemsRepository {
 
-    void addTeam(String teamName, String state);
-
-    void addUser(String firstName, String lastName, String userName, String userNumber, String state, Long teamId);
-
-    void addWorkItem(String title, String descrpition, String state, Long userId);
-
     void saveAllWorkItemsInSQLite();
+
+    void saveAllUsersByTeamIdInSQLite();
+
+    List<User> getAllUsersByTeamId();
 
     List<WorkItem> getAllByTeamId();
 
-    List<WorkItem> getAllMyTask();
+    List<WorkItem> getAllWorkItemsFromSQLite();
 
     List<WorkItem> getAllUnstarted();
 
     List<WorkItem> getAllStarted();
 
     List<WorkItem> getAllDone();
+
+    List<WorkItem> getAllMyTask();
+
+    String getTeamName();
 
     Cursor getAllOverView();
 
