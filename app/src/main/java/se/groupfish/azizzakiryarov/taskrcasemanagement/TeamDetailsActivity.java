@@ -94,7 +94,6 @@ public class TeamDetailsActivity extends AppCompatActivity {
                 if (isOnline(TeamDetailsActivity.this)) {
                     showMessage("SERVER", getAllOverview(1L).toString());
                     showMessage("SQLite", databaseHelper.getAllWorkItemsFromSQLite().toString());
-                    showMessage("SQLite", databaseHelper.getTeamName());
                 } else {
                     showMessage("SQLite", databaseHelper.getAllWorkItemsFromSQLite().toString());
                 }

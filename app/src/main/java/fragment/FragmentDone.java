@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import dbhelper.DatabaseHelper;
 import http.HttpService;
 import model.WorkItem;
-import se.groupfish.azizzakiryarov.taskrcasemanagement.AddWorkItemsActivity;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.R;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.TaskDetailsActivity;
 
@@ -29,14 +27,8 @@ import static http.NetworkState.isOnline;
 public class FragmentDone extends Fragment {
 
     HttpService httpService = new HttpService();
-    FloatingActionButton floatingActionButton;
     ArrayList<WorkItem> workItemsOnline;
     ArrayList<WorkItem> workItemsOffline;
-
-
-    public static Fragment newInstance() {
-        return new FragmentUnstarted();
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -53,15 +45,6 @@ public class FragmentDone extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_done, container, false);
-        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
-        floatingActionButton.setColorFilter(Color.parseColor("#FFFFFF"));
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AddWorkItemsActivity.class);
-                startActivity(intent);
-            }
-        });
 
         if (isOnline(getContext())) {
             workItemsOnline = (ArrayList<WorkItem>) httpService.getAllDone();

@@ -61,7 +61,6 @@ public class AddWorkItemsActivity extends AppCompatActivity {
                 String description = etDescription.getText().toString();
                 String state = etState.getText().toString();
 
-                //ONLINE
                 if (isOnline(AddWorkItemsActivity.this)) {
                     httpService.addWorkItem(title, description, state);
                     Toast.makeText(AddWorkItemsActivity.this, "WorkItem is added to Server...", Toast.LENGTH_SHORT).show();

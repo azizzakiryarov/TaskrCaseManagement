@@ -53,8 +53,6 @@ public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
                 final String state = etState.getText().toString();
                 final Long userId = Long.valueOf(etUser.getText().toString());
 
-
-                //ONLINE
                 if (isOnline(EditAssigneeWorkItemsActivity.this)) {
                     if (!state.isEmpty()) {
                         httpService.updateWorkItemsState(id, state);
@@ -98,7 +96,6 @@ public class EditAssigneeWorkItemsActivity extends AppCompatActivity {
                 final Long id = Long.valueOf(etURL.getText().toString());
                 final String issue = etIssue.getText().toString();
 
-                //ONLINE
                 if (isOnline(EditAssigneeWorkItemsActivity.this)) {
                     if (!issue.isEmpty()) {
                         httpService.addWorkItemToIssue(id, issue);

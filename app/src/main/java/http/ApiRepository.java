@@ -28,9 +28,6 @@ public interface ApiRepository {
     @GET("/workitems/getAllWorkItemsWithIssues/{getAll}")
     Call<List<WorkItem>> getAllMyTask(@Path("getAll") String getAll);
 
-    @GET("/workitems/getById/{id}")
-    Call<WorkItem> getWorkItemById(@Path("id") Long id);
-
     @POST("/workitems")
     Call<WorkItem> addWorkItem(@Body WorkItem workItem);
 

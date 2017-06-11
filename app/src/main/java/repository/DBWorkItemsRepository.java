@@ -1,6 +1,5 @@
 package repository;
 
-import android.database.Cursor;
 
 import java.util.List;
 
@@ -15,8 +14,6 @@ public interface DBWorkItemsRepository {
 
     List<User> getAllUsersByTeamId();
 
-    List<WorkItem> getAllByTeamId();
-
     List<WorkItem> getAllWorkItemsFromSQLite();
 
     List<WorkItem> getAllUnstarted();
@@ -28,12 +25,4 @@ public interface DBWorkItemsRepository {
     List<WorkItem> getAllMyTask();
 
     String getTeamName();
-
-    Cursor getAllOverView();
-
-    Cursor getAllTeams();
-
-    Cursor getAllUsers();
-
-    Cursor getAllWorkItemsTitle();
 }

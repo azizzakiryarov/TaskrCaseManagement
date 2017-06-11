@@ -13,6 +13,19 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="normal_text">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/primary_gray</item>
+        <item name="android:layout_centerInParent">true</item>
+    </style>
+
+    <style name="chart_title">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/primary_gray</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

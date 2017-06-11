@@ -15,12 +15,7 @@ public class Team {
     @Expose
     private String state;
 
-    public Team(){}
-
-    public Team(Long id, String teamName, String state) {
-        this.id = id;
-        this.teamName = teamName;
-        this.state = state;
+    public Team() {
     }
 
     public Long getId() {

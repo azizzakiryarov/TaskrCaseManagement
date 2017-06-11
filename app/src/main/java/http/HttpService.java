@@ -302,37 +302,6 @@ public final class HttpService {
         return getAllUsersByTeamId;
     }
 
-    public WorkItem getWorkItemById(Long id) {
-
-        final WorkItem getWorkItem = new WorkItem();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl(BASE_URL)
-                .build();
-
-        ApiRepository service = retrofit.create(ApiRepository.class);
-
-        Call<WorkItem> call = service.getWorkItemById(id);
-
-        call.enqueue(new Callback<WorkItem>() {
-            @Override
-            public void onResponse(Response<WorkItem> response, Retrofit retrofit) {
-
-                WorkItem workItemFromBody = response.body();
-                getWorkItem.setTitle(workItemFromBody.getTitle());
-                getWorkItem.setDescription(workItemFromBody.getDescription());
-                getWorkItem.setState(workItemFromBody.getState());
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e("FAILURE", t.getMessage(), t);
-            }
-        });
-        return getWorkItem;
-    }
-
     public void addWorkItem(final String title, final String description, final String state) {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -512,11 +481,6 @@ public final class HttpService {
             }
         });
     }
-
-
-
-
-    //POST Method // https://www.youtube.com/watch?v=wg9nG07UvuU
 }
 
 
