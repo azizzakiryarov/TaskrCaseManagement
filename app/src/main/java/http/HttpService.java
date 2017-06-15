@@ -18,7 +18,6 @@ import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-
 public final class HttpService {
 
     private static final String BASE_URL = "http://10.0.2.2:8080";
