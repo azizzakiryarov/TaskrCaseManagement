@@ -4,24 +4,36 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import dbhelper.DatabaseHelper;
+import http.ApiRepository;
 import http.HttpService;
 import model.ProgressB;
+import model.WorkItem;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 import se.groupfish.azizzakiryarov.taskrcasemanagement.R;
 
 import static http.NetworkState.isOnline;
 
 public class ProgressBarFragment extends Fragment {
 
-    private final static String USER_ID = "userId";
+    private static final String BASE_URL = "http://10.0.2.2:8080";
+    private static final Gson gson = new GsonBuilder().create();
     private android.widget.ProgressBar unstartedItems;
     private android.widget.ProgressBar startedItems;
     private android.widget.ProgressBar doneItems;
@@ -32,10 +44,9 @@ public class ProgressBarFragment extends Fragment {
     DatabaseHelper databaseHelper;
 
 
-    public static Fragment newInstance(String id) {
+    public static Fragment newInstance() {
         Fragment fragment = new ProgressBarFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(USER_ID, id);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -80,11 +91,84 @@ public class ProgressBarFragment extends Fragment {
         final TextView myItemsTitle = (TextView) view.findViewById(R.id.tv_my_items);
 
         if (isOnline(getContext())) {
-            unstartedNumber.setText(String.valueOf(httpService.getAllUnstarted().size()));
-            startedNumber.setText(String.valueOf(httpService.getAllStarted().size()));
-            doneNumber.setText(String.valueOf(httpService.getAllDone().size()));
-            myItemsNumber.setText(String.valueOf(httpService.getAllWorkItemsByUserId(2L).size()));
+            Retrofit retrofit = new Retrofit.Builder()
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .baseUrl(BASE_URL)
+                    .build();
+
+            ApiRepository service = retrofit.create(ApiRepository.class);
+
+            Call<List<WorkItem>> call = service.getAllUnstarted("Unstarted");
+
+            call.enqueue(new Callback<List<WorkItem>>() {
+                @Override
+                public void onResponse(Response<List<WorkItem>> response, Retrofit retrofit) {
+                    List<WorkItem> workItems = response.body();
+                    unstartedItems.setProgress(workItems.size());
+                    unstartedNumber.setText(String.valueOf(workItems.size()));
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.e("FAILURE", t.getMessage(), t);
+                }
+            });
+
+            Call<List<WorkItem>> call2 = service.getAllStarted("Started");
+
+            call2.enqueue(new Callback<List<WorkItem>>() {
+                @Override
+                public void onResponse(Response<List<WorkItem>> response, Retrofit retrofit) {
+                    List<WorkItem> workItems = response.body();
+                    startedItems.setProgress(workItems.size());
+                    startedNumber.setText(String.valueOf(workItems.size()));
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.e("FAILURE", t.getMessage(), t);
+                }
+            });
+
+            Call<List<WorkItem>> call3 = service.getAllDone("Done");
+
+            call3.enqueue(new Callback<List<WorkItem>>() {
+                @Override
+                public void onResponse(Response<List<WorkItem>> response, Retrofit retrofit) {
+                    List<WorkItem> workItems = response.body();
+                    doneItems.setProgress(workItems.size());
+                    doneNumber.setText(String.valueOf(workItems.size()));
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.e("FAILURE", t.getMessage(), t);
+                }
+            });
+
+            Call<List<WorkItem>> call4 = service.getAllWorkItemsByUserId(2L);
+
+            call4.enqueue(new Callback<List<WorkItem>>() {
+                @Override
+                public void onResponse(Response<List<WorkItem>> response, Retrofit retrofit) {
+                    List<WorkItem> workItems = response.body();
+                    myItems.setProgress(workItems.size());
+                    myItemsNumber.setText(String.valueOf(workItems.size()));
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.e("FAILURE", t.getMessage(), t);
+                }
+            });
+
         } else {
+
+            unstartedItems.setProgress(databaseHelper.getAllUnstarted().size());
+            startedItems.setProgress(databaseHelper.getAllStarted().size());
+            doneItems.setProgress(databaseHelper.getAllDone().size());
+            myItems.setProgress(databaseHelper.getAllMyTask().size());
+
             unstartedNumber.setText(String.valueOf(databaseHelper.getAllUnstarted().size()));
             startedNumber.setText(String.valueOf(databaseHelper.getAllStarted().size()));
             doneNumber.setText(String.valueOf(databaseHelper.getAllDone().size()));
@@ -92,7 +176,6 @@ public class ProgressBarFragment extends Fragment {
         }
 
         setMaxProgress();
-        setProgress();
 
         final ProgressB progressBMyitems = new ProgressB(myItems, myItemsTitle, myItemsNumber);
         final ProgressB progressBUnstartedItems = new ProgressB(unstartedItems, unstartedTitle, unstartedNumber);
@@ -149,29 +232,15 @@ public class ProgressBarFragment extends Fragment {
 
     private void setMaxProgress() {
         if (isOnline(getContext())) {
-            unstartedItems.setMax(httpService.getAllUnstarted().size());
-            startedItems.setMax(httpService.getAllStarted().size());
-            doneItems.setMax(httpService.getAllDone().size());
-            myItems.setMax(httpService.getAllWorkItems().size());
+            unstartedItems.setMax(10);
+            startedItems.setMax(10);
+            doneItems.setMax(10);
+            myItems.setMax(5);
         } else {
-            unstartedItems.setMax(databaseHelper.getAllUnstarted().size());
-            startedItems.setMax(databaseHelper.getAllStarted().size());
-            doneItems.setMax(databaseHelper.getAllDone().size());
-            myItems.setMax(databaseHelper.getAllMyTask().size());
-        }
-    }
-
-    private void setProgress() {
-        if (isOnline(getContext())) {
-            unstartedItems.setProgress(httpService.getAllUnstarted().size());
-            startedItems.setProgress(httpService.getAllStarted().size());
-            doneItems.setProgress(httpService.getAllDone().size());
-            myItems.setProgress(httpService.getAllWorkItems().size());
-        } else {
-            unstartedItems.setProgress(databaseHelper.getAllUnstarted().size());
-            startedItems.setProgress(databaseHelper.getAllStarted().size());
-            doneItems.setProgress(databaseHelper.getAllDone().size());
-            myItems.setProgress(databaseHelper.getAllMyTask().size());
+            unstartedItems.setMax(10);
+            startedItems.setMax(10);
+            doneItems.setMax(10);
+            myItems.setMax(5);
         }
     }
 
@@ -193,7 +262,6 @@ public class ProgressBarFragment extends Fragment {
                 progressB.getTitle().setTextSize(12);
                 progressB.getTitle().setTextColor(getResources().getColor(R.color.primary_gray));
             }
-
         }
     }
 

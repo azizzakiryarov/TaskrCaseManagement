@@ -44,7 +44,7 @@ public class HomeActivity extends AppCompatActivity implements ProgressBarFragme
         Fragment fragment = fm.findFragmentById(R.id.workitem_list_container);
 
         if (fragment == null) {
-            progressBarFragment = (ProgressBarFragment) ProgressBarFragment.newInstance("");
+            progressBarFragment = (ProgressBarFragment) ProgressBarFragment.newInstance();
             fm.beginTransaction()
                     .replace(R.id.chart_fragment, progressBarFragment)
                     .commit();
